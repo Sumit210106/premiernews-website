@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, User, Moon, Sun } from 'lucide-react';
+import { Search, Menu, X, Moon, Sun } from 'lucide-react';
 import Link from 'next/link';
 
 export const Navbar: React.FC = () => {
@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
           
           <div className="flex-shrink-0 mr-6">
             <Link href="/" className="text-2xl font-black italic tracking-tighter">
-              PREMIERNEWS
+              PREMIER NEWS
             </Link>
           </div>
           
@@ -74,9 +74,6 @@ export const Navbar: React.FC = () => {
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? <Moon size={22} strokeWidth={1.5} /> : <Sun size={22} strokeWidth={1.5} />}
-            </button>
-            <button className="text-white hover:text-white/80 transition-colors bg-transparent border-0 cursor-pointer">
-              <User size={22} strokeWidth={1.5} />
             </button>
             <button className="text-white hover:text-white/80 transition-colors bg-transparent border-0 cursor-pointer">
               <Search size={22} strokeWidth={1.5} />
