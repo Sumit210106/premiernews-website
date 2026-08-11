@@ -45,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col pt-[72px] bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
+      <body className={`${inter.className} min-h-screen flex flex-col pt-[72px] bg-white dark:bg-black text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
         <Navbar />
         <main className="flex-grow">
           {children}

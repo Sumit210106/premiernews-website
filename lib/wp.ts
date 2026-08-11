@@ -16,6 +16,14 @@ export interface Post {
     'wp:featuredmedia'?: Array<{
       source_url: string;
     }>;
+    'author'?: Array<{
+      id: number;
+      name: string;
+      description?: string;
+      avatar_urls?: {
+        [key: string]: string;
+      };
+    }>;
   };
 }
 
@@ -76,4 +84,19 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const posts: Post[] = await res.json();
   return posts[0] || null;
+}
+
+/**
+ * Fetches posts by category ID from the WordPress API
+ */
+export async function getPostsByCategory(categoryId: number, limit: number = 3): Promise<Post[]> {
+  const res = await fetch(`${WP_API_URL}/posts?categories=${categoryId}&_embed&per_page=${limit}&_fields=id,date,link,slug,title,excerpt,_links,_embedded`, {
+    next: { revalidate: 300 } // Optimized: cache API response for 5 minutes
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts for category ${categoryId}: ${res.statusText}`);
+  }
+
+  return res.json();
 }

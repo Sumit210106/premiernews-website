@@ -1,7 +1,6 @@
 import { Metadata } from "next";
-import HeroGrid from "../components/HeroGrid";
-import LatestNews from "../components/LatestNews";
-import { getLatestPosts } from "../lib/wp";
+import HomeClient from "../components/HomeClient";
+import { getLatestPosts, getPostsByCategory } from "../lib/wp";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -9,22 +8,31 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const posts = await getLatestPosts(19); // 5 for hero, 10 for grid, 4 for recommended sidebar
-  
-  if (!posts || posts.length === 0) {
+  // Fetch all sections in parallel with larger pools to allow deduplication
+  const [
+    latestPosts,
+    transferPosts,
+    analysisPosts,
+    internationalPosts
+  ] = await Promise.all([
+    getLatestPosts(35),          // Larger pool for Hero and Latest News grid
+    getPostsByCategory(12, 25),  // Transfer news
+    getPostsByCategory(7, 25),   // Analysis posts
+    getPostsByCategory(378, 25)  // International posts
+  ]);
+
+  if (!latestPosts || latestPosts.length === 0) {
     return <div className="p-8 text-center text-slate-800 dark:text-white">No posts found.</div>;
   }
 
-  const heroPosts = posts.slice(0, 5);
-  const initialGridPosts = posts.slice(5, 15);
-  const recommendedPosts = posts.slice(15, 19);
-
   return (
     <div className="min-h-screen pt-12 pb-24">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <HeroGrid posts={heroPosts} />
-        <LatestNews initialGridPosts={initialGridPosts} recommendedPosts={recommendedPosts} />
-      </div>
+      <HomeClient 
+        initialLatest={latestPosts}
+        initialTransfers={transferPosts}
+        initialAnalysis={analysisPosts}
+        initialInternational={internationalPosts}
+      />
     </div>
   );
 }

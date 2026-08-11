@@ -3,10 +3,12 @@ import Link from 'next/link';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-white py-12 mt-auto">
+    <footer className="bg-primary text-white py-12 mt-auto border-t border-white/10">
       <div className="container mx-auto px-4 lg:px-8 flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
         <div className="flex-1">
-          <h2 className="text-2xl font-black italic tracking-tighter mb-4 text-[#cc0000]">PREMIERNEWS</h2>
+          <h2 className="text-2xl font-black italic tracking-tighter mb-4 text-white">
+            PREMIER <span className="text-accent">NEWS</span>
+          </h2>
           <p className="text-sm text-gray-400 max-w-sm">
             Your top destination for the latest updates, stories, and insights. We deliver news that matters.
           </p>
