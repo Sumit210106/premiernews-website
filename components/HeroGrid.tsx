@@ -15,70 +15,86 @@ export default function HeroGrid({ posts }: HeroGridProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
       {/* Main Featured Article (Left/Middle) */}
-      <Link 
-        href={getPostPath(mainPost)} 
-        className="lg:col-span-2 flex flex-col bg-white dark:bg-zinc-900 rounded-xl overflow-hidden group border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-md h-full"
-      >
+      <div className="lg:col-span-2 flex flex-col bg-white dark:bg-zinc-900 rounded-xl overflow-hidden group border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-md h-full relative">
         <div className="relative w-full flex-grow overflow-hidden h-[300px] lg:min-h-[400px]">
           <img 
             src={getImageUrl(mainPost)} 
             alt={decodeHtml(mainPost.title.rendered)} 
             className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.02]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
         </div>
         
         <div className="p-6 md:p-8 flex flex-col shrink-0">
-          <div className="flex flex-wrap gap-2 mb-3">
+          
+          {/* Clickable Categories (z-30 puts them above the invisible stretched card link) */}
+          <div className="flex flex-wrap gap-2 mb-3 relative z-30">
             {getCategories(mainPost)
               .filter(category => category.name.toLowerCase() !== 'latest news')
               .map(category => (
-                <span key={category.id} className="text-[10px] font-semibold uppercase bg-primary/5 dark:bg-accent/10 text-primary dark:text-accent border border-primary/10 dark:border-accent/20 px-2 py-0.5 rounded tracking-wider inline-block">
+                <Link 
+                  key={category.id} 
+                  href={`/category/${category.slug}`}
+                  className="text-[10px] font-semibold uppercase bg-primary/5 dark:bg-accent/10 text-primary dark:text-accent border border-primary/10 dark:border-accent/20 px-2 py-0.5 rounded tracking-wider inline-block hover:bg-primary/20 dark:hover:bg-accent/20 transition-colors"
+                >
                   {decodeHtml(category.name)}
-                </span>
+                </Link>
             ))}
           </div>
+          
+          {/* Title with CSS stretching trick to cover the whole card */}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-4 leading-snug group-hover:text-primary dark:group-hover:text-accent transition-colors">
-            {decodeHtml(mainPost.title.rendered)}
+            <Link href={getPostPath(mainPost)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+              {decodeHtml(mainPost.title.rendered)}
+            </Link>
           </h2>
           
           <div 
-            className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed font-normal"
+            className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed font-normal relative z-20 pointer-events-none"
             dangerouslySetInnerHTML={{ __html: decodeHtml(mainPost.excerpt.rendered) }}
           />
         </div>
-      </Link>
+      </div>
 
       {/* Recommended Reads (Right) */}
       <div className="lg:col-span-1 flex flex-col gap-4 h-full">
         {sidePosts.map((post) => (
-          <Link 
+          <div 
             key={post.id} 
-            href={getPostPath(post)}
-            className="bg-white dark:bg-zinc-900 text-slate-800 dark:text-slate-300 rounded-xl p-4 flex flex-col justify-center group transition-all duration-300 shadow-sm border border-slate-200 dark:border-zinc-800 flex-grow"
+            className="bg-white dark:bg-zinc-900 text-slate-800 dark:text-slate-300 rounded-xl p-4 flex flex-col justify-center group transition-all duration-300 shadow-sm border border-slate-200 dark:border-zinc-800 flex-grow relative"
           >
             <div className="flex gap-4 items-center">
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap gap-1.5 mb-2">
+                
+                {/* Clickable Categories */}
+                <div className="flex flex-wrap gap-1.5 mb-2 relative z-30">
                   {getCategories(post)
                     .filter(category => category.name.toLowerCase() !== 'latest news')
                     .map(category => (
-                      <span key={category.id} className="text-[9px] font-semibold uppercase bg-primary/5 dark:bg-accent/10 text-primary dark:text-accent border border-primary/10 dark:border-accent/20 px-1.5 py-0.5 rounded tracking-wider inline-block">
+                      <Link 
+                        key={category.id} 
+                        href={`/category/${category.slug}`}
+                        className="text-[9px] font-semibold uppercase bg-primary/5 dark:bg-accent/10 text-primary dark:text-accent border border-primary/10 dark:border-accent/20 px-1.5 py-0.5 rounded tracking-wider inline-block hover:bg-primary/20 dark:hover:bg-accent/20 transition-colors"
+                      >
                         {decodeHtml(category.name)}
-                      </span>
+                      </Link>
                   ))}
                 </div>
+
+                {/* Title stretching over card */}
                 <h4 className="font-semibold text-sm leading-snug text-slate-800 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-accent transition-colors mb-1.5">
-                  {decodeHtml(post.title.rendered)}
+                  <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+                    {decodeHtml(post.title.rendered)}
+                  </Link>
                 </h4>
                 
                 <div 
-                  className="text-slate-500 dark:text-slate-400 text-xs line-clamp-2 leading-relaxed font-normal"
+                  className="text-slate-500 dark:text-slate-400 text-xs line-clamp-2 leading-relaxed font-normal relative z-20 pointer-events-none"
                   dangerouslySetInnerHTML={{ __html: decodeHtml(post.excerpt.rendered) }}
                 />
               </div>
               
-              <div className="w-[110px] h-[85px] shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-zinc-800 relative">
+              <div className="w-[110px] h-[85px] shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-zinc-800 relative z-20 pointer-events-none">
                 <img 
                   src={getImageUrl(post)} 
                   alt={decodeHtml(post.title.rendered)}
@@ -86,7 +102,7 @@ export default function HeroGrid({ posts }: HeroGridProps) {
                 />
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       

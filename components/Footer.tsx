@@ -1,39 +1,131 @@
 import React from 'react';
 import Link from 'next/link';
 
-export const Footer: React.FC = () => {
+export default function Footer() {
+  const leftColumnClubs = [
+    { name: 'Arsenal', slug: 'arsenal-news-now' },
+    { name: 'Aston Villa', slug: 'aston-villa-news-now' },
+    { name: 'Bournemouth', slug: 'afc-bournemouth-news-now' },
+    { name: 'Brentford', slug: 'brentford-news-now' },
+    { name: 'Brighton', slug: 'brighton-hove-albion-news-now' },
+    { name: 'Burnley', slug: 'burnley-news-now' },
+    { name: 'Chelsea', slug: 'chelsea-news-now' },
+    { name: 'Crystal Palace', slug: 'crystal-palace-news-now' },
+    { name: 'Everton', slug: 'everton-news-now' },
+    { name: 'Fulham', slug: 'fulham-news-now' },
+  ];
+
+  const rightColumnClubs = [
+    { name: 'Leeds United', slug: 'leeds-united-news-now' },
+    { name: 'Liverpool', slug: 'liverpool-news-now' },
+    { name: 'Man City', slug: 'manchester-city-news-now' },
+    { name: 'Manchester United', slug: 'manchester-united-news-now' },
+    { name: 'Newcastle United', slug: 'newcastle-united-news-now' },
+    { name: 'Nottingham Forest', slug: 'nottingham-forest-news-now' },
+    { name: 'Sunderland', slug: 'sunderland-news-now' },
+    { name: 'Tottenham', slug: 'tottenham-hotspur-news-now' },
+    { name: 'West Ham', slug: 'west-ham-united-news-now' },
+    { name: 'Wolves', slug: 'wolves' },
+  ];
+
   return (
-    <footer className="bg-primary text-white py-12 mt-auto border-t border-white/10">
-      <div className="container mx-auto px-4 lg:px-8 flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
-        <div className="flex-1">
-          <h2 className="text-2xl font-black italic tracking-tighter mb-4 text-white">
-            PREMIER <span className="text-accent">NEWS</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-sm">
-            Your top destination for the latest updates, stories, and insights. We deliver news that matters.
+    <footer className="bg-[#38003c] text-slate-300 pt-14 pb-8 border-t border-white/10">
+      <div className="container mx-auto px-4 max-w-7xl">
+        
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+          
+          {/* Column 1: Logo, Description, Disclaimer & Social Icons */}
+          <div className="lg:col-span-5 flex flex-col gap-5">
+            <Link href="/" className="inline-block">
+              <img 
+                src="https://premierleaguenewsnow.com/wp-content/uploads/2025/05/premier-league-news-now-logo-white.png" 
+                alt="Premier League News Now" 
+                className="h-10 w-auto object-contain"
+              />
+            </Link>
+
+            <p className="text-xs md:text-sm leading-relaxed text-slate-300">
+              At Premier League News Now, we provide you with the latest Premier League Football Clubs News. Our efficient content writers are dedicated Football Fans from around the globe following the English Premier League and very passionate about the club they support. #EPL
+            </p>
+
+            <p className="text-xs md:text-sm text-slate-300">
+              We are not affiliated with premierleague.com.
+            </p>
+
+            <div className="flex items-center gap-3 pt-2">
+              <a href="https://www.facebook.com/plnewsnow/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="Facebook">
+                <span className="text-xs font-bold">f</span>
+              </a>
+              <a href="https://x.com/nnpremierleague" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="X (Twitter)">
+                <span className="text-xs font-bold">𝕏</span>
+              </a>
+              <a href="https://in.pinterest.com/premierleaguenewsnow/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="Pinterest">
+                <span className="text-xs font-bold">P</span>
+              </a>
+              <a href="https://www.linkedin.com/company/premier-league-news-now/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="LinkedIn">
+                <span className="text-xs font-bold">in</span>
+              </a>
+              <a href="https://premierleaguenewsnow.com/feed/rss/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="RSS Feed">
+                <span className="text-xs font-bold">rss</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Column 2 & 3: Club Navigation Links */}
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-2 gap-8 pt-2">
+            <ul className="flex flex-col gap-2.5">
+              {leftColumnClubs.map((club) => (
+                <li key={club.slug}>
+                  <Link 
+                    href={`/tag/${club.slug}`} 
+                    className="text-xs md:text-sm text-slate-300 hover:text-[#00ff85] transition-colors"
+                  >
+                    {club.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <ul className="flex flex-col gap-2.5">
+              {rightColumnClubs.map((club) => (
+                <li key={club.slug}>
+                  <Link 
+                    href={`/tag/${club.slug}`} 
+                    className="text-xs md:text-sm text-slate-300 hover:text-[#00ff85] transition-colors"
+                  >
+                    {club.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Copyright, Legal Links & Developed By */}
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
+            <p>© 2026 Premier League News Now. All rights reserved.</p>
+            {/* Added Write For Us and Privacy Policy Links */}
+            <div className="flex items-center gap-4 text-slate-300 font-medium">
+              <Link href="/write-for-us" className="hover:text-[#00ff85] transition-colors">Write For Us</Link>
+              <Link href="/privacy-policy" className="hover:text-[#00ff85] transition-colors">Privacy Policy</Link>
+            </div>
+          </div>
+          <p>
+            Developed by{' '}
+            <a 
+              href="https://kolacommunications.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white font-semibold hover:text-[#00ff85] transition-colors"
+            >
+              Kola Communications
+            </a>
           </p>
         </div>
-        
-        <div className="flex-1 flex gap-12">
-          <div className="flex flex-col gap-2">
-            <h3 className="font-bold uppercase tracking-wider mb-2 text-sm text-gray-300">Quick Links</h3>
-            <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">Home</Link>
-            <Link href="/latest-news" className="text-sm text-gray-400 hover:text-white transition-colors">Latest News</Link>
-            <Link href="/about" className="text-sm text-gray-400 hover:text-white transition-colors">About Us</Link>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="font-bold uppercase tracking-wider mb-2 text-sm text-gray-300">Support</h3>
-            <Link href="/contact" className="text-sm text-gray-400 hover:text-white transition-colors">Contact Us</Link>
-            <Link href="/write-for-us" className="text-sm text-gray-400 hover:text-white transition-colors">Write For Us</Link>
-            <Link href="/privacy-policy" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
-          </div>
-        </div>
-      </div>
-      <div className="container mx-auto px-4 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-center text-xs text-gray-500">
-        &copy; {new Date().getFullYear()} PremierNews. All rights reserved.
+
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

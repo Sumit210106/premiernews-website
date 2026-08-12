@@ -88,9 +88,9 @@ export default function CategorySection({
       <div className="flex flex-col mb-8">
         <div className="flex items-center gap-4">
           <div className="w-2 h-8 bg-[#4a0e4e] dark:bg-accent rounded-sm shrink-0"></div>
-          <h1 className="text-2xl sm:text-3xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white shrink-0">
+          <h2 className="text-2xl sm:text-3xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white shrink-0">
             {title}
-          </h1>
+          </h2>
           <div className="h-px bg-slate-200 dark:bg-zinc-800 flex-grow"></div>
         </div>
         {description && (
@@ -105,12 +105,12 @@ export default function CategorySection({
       {layout === 'list' && (
         <div className="flex flex-col gap-6">
           {gridPosts.map((post) => (
-            <Link 
-              href={getPostPath(post)}
+            <div 
               key={post.id} 
-              className="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group flex flex-col md:flex-row"
+              className="group relative bg-white dark:bg-zinc-900 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex flex-col md:flex-row"
             >
-              <div className="relative w-full md:w-[35%] h-[180px] md:h-auto shrink-0 overflow-hidden">
+              {/* Image */}
+              <div className="relative w-full md:w-[35%] h-[180px] md:h-auto shrink-0 overflow-hidden z-0 pointer-events-none">
                 <img 
                   src={getImageUrl(post)} 
                   alt={decodeHtml(post.title.rendered)} 
@@ -118,19 +118,24 @@ export default function CategorySection({
                 />
               </div>
               
+              {/* Content */}
               <div className="p-5 flex flex-col justify-center flex-grow w-full md:w-[65%]">
                 
                 {(showCategoryTag || showDate) && (
-                  <div className="flex items-center gap-3 mb-3 flex-wrap">
+                  <div className="flex items-center gap-3 mb-3 flex-wrap relative z-30">
                     {showCategoryTag && (
                       <div className="flex gap-1.5 flex-wrap">
                         {getCategories(post)
                           .filter(c => c.name.toLowerCase() !== 'latest news')
                           .slice(0, 1)
                           .map(c => (
-                            <span key={c.id} className="text-[9px] font-semibold uppercase bg-[#4a0e4e]/10 dark:bg-accent/10 text-[#4a0e4e] dark:text-accent border border-[#4a0e4e]/10 dark:border-accent/20 px-1.5 py-0.5 rounded tracking-wider inline-block">
+                            <Link 
+                              key={c.id} 
+                              href={`/category/${c.slug}`}
+                              className="text-[9px] font-semibold uppercase bg-[#4a0e4e]/10 dark:bg-accent/10 text-[#4a0e4e] dark:text-accent border border-[#4a0e4e]/10 dark:border-accent/20 px-1.5 py-0.5 rounded tracking-wider inline-block hover:bg-[#4a0e4e]/20 dark:hover:bg-accent/20 transition-colors"
+                            >
                               {decodeHtml(c.name)}
-                            </span>
+                            </Link>
                         ))}
                       </div>
                     )}
@@ -143,57 +148,74 @@ export default function CategorySection({
                 )}
                 
                 <h3 className="text-lg md:text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2.5 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors">
-                  {decodeHtml(post.title.rendered)}
+                  <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+                    {decodeHtml(post.title.rendered)}
+                  </Link>
                 </h3>
                 
                 <div 
-                  className="text-slate-600 dark:text-slate-400 text-xs md:text-sm line-clamp-2 leading-relaxed font-normal"
+                  className="text-slate-600 dark:text-slate-400 text-xs md:text-sm line-clamp-2 leading-relaxed font-normal relative z-20 pointer-events-none"
                   dangerouslySetInnerHTML={{ __html: decodeHtml(post.excerpt.rendered) }}
                 />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
 
-      {/* --- COMPACT LAYOUT (Restored!) --- */}
+      {/* --- NEW COMPACT LAYOUT (2 Columns, Card Box, Image Top, Number Behind Title) --- */}
       {layout === 'compact' && (
-        <div className="flex flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {gridPosts.map((post, index) => (
-            <Link 
-              href={getPostPath(post)}
+            <div 
               key={post.id} 
-              className="group relative flex flex-col justify-center py-7 border-b border-slate-100 dark:border-zinc-800/60 transition-all duration-300 first:pt-2 overflow-hidden"
+              className="group relative bg-white dark:bg-zinc-900 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex flex-col p-4 sm:p-5"
             >
-              <span className="absolute -left-2 md:left-2 -top-2 md:-top-4 text-7xl md:text-[100px] leading-none font-black italic text-slate-100 dark:text-zinc-800/40 z-0 transition-all duration-500 group-hover:-translate-y-2 group-hover:translate-x-2 group-hover:scale-105 group-hover:text-[#4a0e4e]/10 dark:group-hover:text-accent/10 select-none">
-                {String(index + 1).padStart(2, '0')}
-              </span>
+              {/* Invisible link covering the entire card */}
+              <Link href={getPostPath(post)} className="absolute inset-0 z-20">
+                <span className="sr-only">Read story</span>
+              </Link>
               
-              <div className="relative z-10 pl-8 md:pl-16 flex flex-col justify-center transition-transform duration-500 group-hover:translate-x-2">
-                
-                {showDate && (
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 block">
-                    {formatDate(post.date)}
-                  </span>
-                )}
-                
-                <h3 className="text-base md:text-lg font-medium text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors max-w-4xl">
-                  {decodeHtml(post.title.rendered)}
-                </h3>
-                
-                <div className="mt-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors duration-300">
-                  <span className="w-4 h-[2px] bg-slate-200 dark:bg-zinc-700 group-hover:w-8 group-hover:bg-[#4a0e4e]/60 dark:group-hover:bg-accent/60 transition-all duration-500 ease-out"></span>
-                  Read Story 
-                  <span className="transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">→</span>
-                </div>
+              {/* TOP: Image */}
+              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden shadow-sm mb-4 bg-slate-100 dark:bg-zinc-900 z-10 pointer-events-none">
+                <img 
+                  src={getImageUrl(post)} 
+                  alt={decodeHtml(post.title.rendered)} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-            </Link>
+
+              {/* BOTTOM: Content with Number Behind */}
+              <div className="relative flex flex-col flex-grow overflow-hidden">
+                
+                {/* Giant Background Number */}
+                <span className="absolute -top-4 -left-2 text-[75px] md:text-[90px] leading-none font-black italic text-slate-100 dark:text-zinc-800/40 z-0 transition-transform duration-500 group-hover:-translate-x-1 group-hover:text-[#4a0e4e]/10 dark:group-hover:text-accent/10 select-none pointer-events-none">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
+                {/* Content Foreground */}
+                <div className="relative z-10 flex flex-col pt-3 pl-2 pr-2">
+                  {showDate && (
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1.5 block">
+                      {formatDate(post.date)}
+                    </span>
+                  )}
+                  
+                  {/* Removed line-clamp-3 so the title fully expands */}
+                  <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors">
+                    {decodeHtml(post.title.rendered)}
+                  </h3>
+                </div>
+                
+              </div>
+            </div>
           ))}
         </div>
       )}
 
+      {/* LOAD MORE BUTTON */}
       {hasMore && (
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center mt-12">
           <button 
             onClick={loadMore}
             disabled={isLoading}

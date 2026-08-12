@@ -9,17 +9,21 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "PremierNews | Latest Football News & Updates",
-    template: "%s | PremierNews"
+    default: "Premier League News Now | Latest Football News & Updates",
+    template: "%s | Premier League News Now"
   },
   description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
   keywords: ["Premier League", "Football News", "EPL", "Soccer", "Transfer News", "Latest Updates"],
-  authors: [{ name: "PremierNews" }],
+  authors: [{ name: "Premier League News Now" }],
+  icons: {
+    icon: "https://premierleaguenewsnow.com/wp-content/uploads/2026/08/premierleaguenewsnow-favicon.png",
+    apple: "https://premierleaguenewsnow.com/wp-content/uploads/2026/08/premierleaguenewsnow-favicon.png",
+  },
   openGraph: {
-    title: "PremierNews | Latest Football News & Updates",
+    title: "Premier League News Now | Latest Football News & Updates",
     description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
     url: "https://premierleaguenewsnow.com",
-    siteName: "PremierNews",
+    siteName: "Premier League News Now",
     images: [
       {
         url: "https://premierleaguenewsnow.com/wp-content/uploads/2024/05/Bruno-Guimaraes-Arsenal-Transfer.jpg",
@@ -32,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PremierNews | Latest Football News & Updates",
+    title: "Premier League News Now | Latest Football News & Updates",
     description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
     images: ["https://premierleaguenewsnow.com/wp-content/uploads/2024/05/Bruno-Guimaraes-Arsenal-Transfer.jpg"],
   },
@@ -45,7 +49,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col pt-[72px] bg-white dark:bg-black text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
+      <head>
+        <link rel="icon" href="https://premierleaguenewsnow.com/wp-content/uploads/2026/08/premierleaguenewsnow-favicon.png" sizes="32x32" />
+      </head>
+      <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-black text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
         <Navbar />
         <main className="flex-grow">
           {children}
