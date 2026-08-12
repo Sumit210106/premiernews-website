@@ -96,13 +96,13 @@ export default function MobileTabs({
                 const spDate = new Date(sp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 return (
                   <Link href={getPostPath(sp)} key={sp.id} className="group flex gap-4 items-start">
-                    <span className="text-4xl font-black text-slate-300 dark:text-zinc-800 leading-none mt-1 group-hover:text-[#4a0e4e] transition-colors">
+                    <span className="text-4xl font-black text-slate-300 dark:text-zinc-800 leading-none mt-1 group-hover:text-[#4a0e4e] dark:group-hover:text-zinc-800 transition-colors">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
                     <div className="flex flex-col gap-1.5 pt-1">
                       {/* Sidebar Title natively decodes entities too */}
                       <h4 
-                        className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] transition-colors"
+                        className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors"
                         dangerouslySetInnerHTML={{ __html: sp.title.rendered }}
                       />
                       <span className="text-[11px] text-slate-400 font-medium tracking-wide">

@@ -45,7 +45,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#38003c] text-slate-300 pt-14 pb-8 border-t border-white/10">
+    <footer className="bg-[#38003c] dark:bg-[#38003c] text-slate-300 dark:text-slate-300 pt-14 pb-8 border-t border-white/10 dark:border-white/10">
       <div className="container mx-auto px-4 max-w-7xl">
         
         {/* Main Footer Grid */}
@@ -61,11 +61,11 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="text-xs md:text-sm leading-relaxed text-slate-300">
+            <p className="text-xs md:text-sm leading-relaxed text-slate-300 dark:text-slate-300">
               At Premier League News Now, we provide you with the latest Premier League Football Clubs News. Our efficient content writers are dedicated Football Fans from around the globe following the English Premier League and very passionate about the club they support. #EPL
             </p>
 
-            <p className="text-xs md:text-sm text-slate-300">
+            <p className="text-xs md:text-sm text-slate-300 dark:text-slate-300">
               We are not affiliated with premierleague.com.
             </p>
 
@@ -76,7 +76,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors shrink-0"
+                  className="w-8 h-8 rounded-full bg-white/10 dark:bg-white/10 flex items-center justify-center text-white dark:text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors shrink-0"
                   aria-label={label}
                   title={label}
                 >
@@ -93,7 +93,7 @@ export default function Footer() {
                 <li key={club.slug}>
                   <Link 
                     href={`/tag/${club.slug}`} 
-                    className="text-xs md:text-sm text-slate-300 hover:text-[#00ff85] transition-colors"
+                    className="text-xs md:text-sm text-slate-300 dark:text-slate-300 hover:text-[#00ff85] transition-colors"
                   >
                     {club.name}
                   </Link>
@@ -106,7 +106,7 @@ export default function Footer() {
                 <li key={club.slug}>
                   <Link 
                     href={`/tag/${club.slug}`} 
-                    className="text-xs md:text-sm text-slate-300 hover:text-[#00ff85] transition-colors"
+                    className="text-xs md:text-sm text-slate-300 dark:text-slate-300 hover:text-[#00ff85] transition-colors"
                   >
                     {club.name}
                   </Link>
@@ -117,11 +117,11 @@ export default function Footer() {
         </div>
 
         {/* Copyright, Legal Links & Developed By */}
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-6">
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-400 gap-6">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
             <p>© 2026 Premier League News Now. All rights reserved.</p>
             {/* Added Write For Us and Privacy Policy Links */}
-            <div className="flex items-center gap-4 text-slate-300 font-medium">
+            <div className="flex items-center gap-4 text-slate-300 dark:text-slate-300 font-medium">
               <Link href="/write-for-us" className="hover:text-[#00ff85] transition-colors">Write For Us</Link>
               <Link href="/privacy-policy" className="hover:text-[#00ff85] transition-colors">Privacy Policy</Link>
             </div>

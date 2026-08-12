@@ -43,7 +43,7 @@ export default function HeroGrid({ posts }: HeroGridProps) {
           </div>
           
           {/* Title with CSS stretching trick to cover the whole card */}
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-4 leading-snug group-hover:text-primary dark:group-hover:text-accent transition-colors">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-4 leading-snug group-hover:text-primary dark:group-hover:text-slate-100 transition-colors">
             <Link href={getPostPath(mainPost)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
               {decodeHtml(mainPost.title.rendered)}
             </Link>
@@ -82,7 +82,7 @@ export default function HeroGrid({ posts }: HeroGridProps) {
                 </div>
 
                 {/* Title stretching over card */}
-                <h4 className="font-semibold text-sm leading-snug text-slate-800 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-accent transition-colors mb-1.5">
+                <h4 className="font-semibold text-sm leading-snug text-slate-800 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-slate-100 transition-colors mb-1.5">
                   <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
                     {decodeHtml(post.title.rendered)}
                   </Link>

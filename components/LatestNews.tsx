@@ -97,7 +97,7 @@ export default function LatestNews({ initialGridPosts, recommendedPosts }: Lates
                           <span>{formatDate(post.date)}</span>
                         </div>
                         <Link href={`/posts/${post.slug}`}>
-                          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors line-clamp-2">
+                            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-slate-100 transition-colors line-clamp-2">
                             {decodeHtml(post.title.rendered)}
                           </h3>
                         </Link>
@@ -142,7 +142,7 @@ export default function LatestNews({ initialGridPosts, recommendedPosts }: Lates
                             <span>{formatDate(post.date)}</span>
                           </div>
                           <Link href={`/posts/${post.slug}`}>
-                            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors line-clamp-2">
+                            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-slate-100 transition-colors line-clamp-2">
                               {decodeHtml(post.title.rendered)}
                             </h3>
                           </Link>
@@ -188,7 +188,7 @@ export default function LatestNews({ initialGridPosts, recommendedPosts }: Lates
                             <span>{formatDate(post.date)}</span>
                           </div>
                           <Link href={`/posts/${post.slug}`}>
-                            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors line-clamp-2">
+                            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-snug hover:text-emerald-600 dark:hover:text-slate-100 transition-colors line-clamp-2">
                               {decodeHtml(post.title.rendered)}
                             </h3>
                           </Link>
@@ -220,7 +220,7 @@ export default function LatestNews({ initialGridPosts, recommendedPosts }: Lates
               <button 
                 onClick={loadMore}
                 disabled={isLoading}
-                className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-slate-200 hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-400 px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm disabled:opacity-50"
+                  className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-slate-200 hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-slate-200 px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm disabled:opacity-50"
               >
                 {isLoading ? "Loading Stories..." : "View More Stories"}
               </button>
@@ -245,7 +245,7 @@ export default function LatestNews({ initialGridPosts, recommendedPosts }: Lates
                   </span>
                   <div className="min-w-0">
                     <Link href={`/posts/${post.slug}`}>
-                      <h4 className="font-semibold text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors line-clamp-2">
+                      <h4 className="font-semibold text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-slate-200 transition-colors line-clamp-2">
                         {decodeHtml(post.title.rendered)}
                       </h4>
                     </Link>

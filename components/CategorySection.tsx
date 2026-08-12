@@ -147,7 +147,7 @@ export default function CategorySection({
                   </div>
                 )}
                 
-                <h3 className="text-lg md:text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2.5 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors">
+                <h3 className="text-lg md:text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2.5 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors">
                   <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
                     {decodeHtml(post.title.rendered)}
                   </Link>
@@ -202,7 +202,7 @@ export default function CategorySection({
                   )}
                   
                   {/* Removed line-clamp-3 so the title fully expands */}
-                  <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-accent transition-colors">
+                  <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors">
                     {decodeHtml(post.title.rendered)}
                   </h3>
                 </div>
@@ -219,7 +219,7 @@ export default function CategorySection({
           <button 
             onClick={loadMore}
             disabled={isLoading}
-            className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-slate-200 hover:border-[#4a0e4e] dark:hover:border-accent/50 hover:text-[#4a0e4e] dark:hover:text-accent px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm disabled:opacity-50"
+            className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-800 dark:text-slate-200 hover:border-[#4a0e4e] dark:hover:border-accent/50 hover:text-[#4a0e4e] dark:hover:text-slate-200 px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm disabled:opacity-50"
           >
             {isLoading ? "Loading Stories..." : "Load More Stories"}
           </button>
