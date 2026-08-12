@@ -1,7 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faFacebookF,
+  faXTwitter,
+  faPinterestP,
+  faLinkedinIn,
+} from '@fortawesome/free-brands-svg-icons';
+import { faRss } from '@fortawesome/free-solid-svg-icons';
 
 export default function Footer() {
+  const socialLinks = [
+    { href: 'https://www.facebook.com/plnewsnow/', label: 'Facebook', icon: faFacebookF },
+    { href: 'https://x.com/nnpremierleague', label: 'X (Twitter)', icon: faXTwitter },
+    { href: 'https://in.pinterest.com/premierleaguenewsnow/', label: 'Pinterest', icon: faPinterestP },
+    { href: 'https://www.linkedin.com/company/premier-league-news-now/', label: 'LinkedIn', icon: faLinkedinIn },
+    { href: 'https://premierleaguenewsnow.com/feed/rss/', label: 'RSS Feed', icon: faRss },
+  ];
+
   const leftColumnClubs = [
     { name: 'Arsenal', slug: 'arsenal-news-now' },
     { name: 'Aston Villa', slug: 'aston-villa-news-now' },
@@ -54,21 +70,19 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center gap-3 pt-2">
-              <a href="https://www.facebook.com/plnewsnow/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="Facebook">
-                <span className="text-xs font-bold">f</span>
-              </a>
-              <a href="https://x.com/nnpremierleague" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="X (Twitter)">
-                <span className="text-xs font-bold">𝕏</span>
-              </a>
-              <a href="https://in.pinterest.com/premierleaguenewsnow/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="Pinterest">
-                <span className="text-xs font-bold">P</span>
-              </a>
-              <a href="https://www.linkedin.com/company/premier-league-news-now/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="LinkedIn">
-                <span className="text-xs font-bold">in</span>
-              </a>
-              <a href="https://premierleaguenewsnow.com/feed/rss/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors" aria-label="RSS Feed">
-                <span className="text-xs font-bold">rss</span>
-              </a>
+              {socialLinks.map(({ href, label, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#00ff85] hover:text-[#38003c] transition-colors shrink-0"
+                  aria-label={label}
+                  title={label}
+                >
+                  <FontAwesomeIcon icon={icon} className="w-3.5 h-3.5" />
+                </a>
+              ))}
             </div>
           </div>
 

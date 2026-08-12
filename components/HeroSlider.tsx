@@ -34,9 +34,14 @@ export default function HeroSlider({ posts }: HeroSliderProps) {
 
   const decodeHtml = (html: string) => {
     return html
+      .replace(/&#038;/g, '&')
+      .replace(/&amp;/g, '&')
+      .replace(/&#8216;/g, "'")
       .replace(/&#8217;/g, "'")
-      .replace(/&amp;/g, "&")
-      .replace(/&#8211;/g, "-")
+      .replace(/&rsquo;/g, "'")
+      .replace(/&#8230;/g, '…')
+      .replace(/&#8211;/g, '-')
+      .replace(/&#8212;/g, '—')
       .replace(/&#8220;/g, '"')
       .replace(/&#8221;/g, '"');
   };
