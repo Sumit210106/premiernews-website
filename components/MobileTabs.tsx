@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getPostPath } from '@/lib/wp';
 
@@ -8,7 +8,7 @@ export default function MobileTabs({
   latest,
   analysis,
   exclusive,
-  sidebarPosts
+  sidebarPosts 
 }: {
   latest: any[],
   analysis: any[],
@@ -16,6 +16,11 @@ export default function MobileTabs({
   sidebarPosts: any[]
 }) {
   const [activeTab, setActiveTab] = useState('latest');
+
+  // NEW: Instantly snap back to the top of the page when switching tabs
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
 
   const tabs = [
     { id: 'latest', label: 'LATEST NEWS', data: latest },
@@ -56,12 +61,11 @@ export default function MobileTabs({
               key={post.id} 
               className="flex gap-4 py-4 border-b border-slate-100 dark:border-zinc-800/60 items-start active:bg-slate-50 dark:active:bg-zinc-900 transition-colors"
             >
-              <div className="w-[110px] h-[80px] shrink-0 overflow-hidden bg-slate-100 dark:bg-zinc-800">
+              <div className="w-[110px] h-[80px] shrink-0 overflow-hidden bg-slate-100 dark:bg-zinc-800 rounded">
                 <img src={imageUrl} alt="" className="w-full h-full object-cover" />
               </div>
               
               <div className="flex flex-col justify-center pt-0.5">
-                {/* Title (No Categories, fully shown without clamping, natively decodes entities like &#038;) */}
                 <h3 
                   className="text-[15px] font-bold text-slate-900 dark:text-slate-100 leading-snug"
                   dangerouslySetInnerHTML={{ __html: post.title.rendered }}
@@ -77,49 +81,46 @@ export default function MobileTabs({
         )}
       </div>
 
-      {/* Mobile Sidebar (Appears below tabs) */}
-      <div className="flex flex-col gap-8 mt-12">
+      {/* Mobile Sidebar (Matches Desktop HomeClient.tsx precisely) */}
+      <div className="flex flex-col gap-6 mt-12 pt-8 border-t border-slate-200 dark:border-zinc-800">
         
-        {/* Top Ad Placeholder */}
-        <div className="bg-slate-50 dark:bg-zinc-800/50 flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 text-xs font-semibold tracking-widest uppercase">
+        {/* Ad Placeholder 1 (MREC) */}
+        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
           Advertisement
         </div>
 
-        {/* Recommended Stories Widget */}
-        {sidebarPosts.length > 0 && (
-          <div className="bg-slate-50 dark:bg-zinc-900/50 p-6 border border-slate-200 dark:border-zinc-800">
-            <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6 pb-4 border-b border-slate-200 dark:border-zinc-800">
-              Recommended Stories
-            </h3>
-            <div className="flex flex-col gap-6">
-              {sidebarPosts.map((sp: any, idx: number) => {
-                const spDate = new Date(sp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                return (
-                  <Link href={getPostPath(sp)} key={sp.id} className="group flex gap-4 items-start">
-                    <span className="text-4xl font-black text-slate-300 dark:text-zinc-800 leading-none mt-1 group-hover:text-[#4a0e4e] dark:group-hover:text-zinc-800 transition-colors">
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                    <div className="flex flex-col gap-1.5 pt-1">
-                      {/* Sidebar Title natively decodes entities too */}
-                      <h4 
-                        className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors"
-                        dangerouslySetInnerHTML={{ __html: sp.title.rendered }}
-                      />
-                      <span className="text-[11px] text-slate-400 font-medium tracking-wide">
-                        {spDate}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {/* Banner 1 */}
+        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+          <a href="https://www.sportwettenschweiz.org" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" 
+              alt="SportwettenSchweiz" 
+              className="w-full h-auto object-cover"
+            />
+          </a>
+        </div>
 
-        {/* Bottom Ad Placeholder */}
-        <div className="bg-slate-50 dark:bg-zinc-800/50 flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 text-xs font-semibold tracking-widest uppercase">
+        {/* Ad Placeholder 2 */}
+        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
           Advertisement
         </div>
+
+        {/* Banner 2 */}
+        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+          <a href="https://www.schweizersportwetten.info/" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" 
+              alt="sportwetten-schweiz" 
+              className="w-full h-auto object-cover"
+            />
+          </a>
+        </div>
+        
+        {/* Ad Placeholder 3 */}
+        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
+          Advertisement
+        </div>
+
       </div>
 
     </div>
