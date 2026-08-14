@@ -25,16 +25,16 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      # 5. Build the project and export static HTML to ./out/
+      # 5. Build the project and export static HTML to ./dist/
       - name: Build Project
         run: npm run build
 
-      # 6. Take the finished 'out' folder and push it to Hostinger via FTP
+      # 6. Take the finished 'dist' folder and push it to Hostinger via FTP
       - name: Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./out/
+          local-dir: ./dist/
           server-dir: /public_html/
