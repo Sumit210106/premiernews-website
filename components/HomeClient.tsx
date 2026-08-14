@@ -5,6 +5,7 @@ import HeroGrid from './HeroGrid';
 import CategorySection from './CategorySection';
 import { Post } from '../lib/wp';
 import Image from 'next/image';
+import AdBanner from '@/components/AdBanner'; // <-- IMPORT ADBANNER
 
 interface HomeClientProps {
   initialLatest: Post[];
@@ -32,6 +33,9 @@ export default function HomeClient({
       {/* 1. Hero Section */}
       <HeroGrid posts={heroPosts} />
 
+      {/* HORIZONTAL AD: Between Hero Grid and Main Content */}
+      <AdBanner slotId="YOUR_HOMEPAGE_HERO_BOTTOM_SLOT" />
+
       {/* MAIN HOMEPAGE GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         
@@ -47,6 +51,9 @@ export default function HomeClient({
             showCategoryTag={true}
           />
 
+          {/* HORIZONTAL AD: Between Categories */}
+          <AdBanner slotId="YOUR_HOMEPAGE_MID_FEED_SLOT_1" />
+
           {/* 3. Analysis Section (Compact Layout) */}
           {initialAnalysis && initialAnalysis.length > 0 && (
             <CategorySection 
@@ -58,6 +65,9 @@ export default function HomeClient({
               showCategoryTag={false}
             />
           )}
+
+          {/* HORIZONTAL AD: Between Categories */}
+          <AdBanner slotId="YOUR_HOMEPAGE_MID_FEED_SLOT_2" />
 
           {/* 4. Exclusive Section (Compact Layout) */}
           {initialExclusives && initialExclusives.length > 0 && (
@@ -76,10 +86,8 @@ export default function HomeClient({
         {/* RIGHT COLUMN: Master Sticky Sidebar */}
         <div className="lg:col-span-1 sticky top-24 self-start flex flex-col gap-6 pt-16 mt-16 lg:pt-0 lg:mt-0">
           
-          {/* Ad Placeholder 1 (MREC) */}
-          <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-            Advertisement
-          </div>
+          {/* DESKTOP SIDEBAR AD 1 */}
+          <AdBanner slotId="YOUR_DESKTOP_SIDEBAR_SLOT_1" />
 
           {/* Banner 1 */}
           <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
@@ -96,10 +104,8 @@ export default function HomeClient({
             </a>
           </div>
 
-          {/* Ad Placeholder 2 */}
-          <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-            Advertisement
-          </div>
+          {/* DESKTOP SIDEBAR AD 2 */}
+          <AdBanner slotId="YOUR_DESKTOP_SIDEBAR_SLOT_2" />
 
           {/* Banner 2 */}
           <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
@@ -116,10 +122,8 @@ export default function HomeClient({
             </a>
           </div>
           
-          {/* Ad Placeholder 3 (Normal Fixed Size) */}
-          <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-            Advertisement
-          </div>
+          {/* DESKTOP SIDEBAR AD 3 */}
+          <AdBanner slotId="YOUR_DESKTOP_SIDEBAR_SLOT_3" />
 
         </div>
 

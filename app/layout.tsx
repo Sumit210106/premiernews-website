@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ThemeProvider } from "../components/ThemeProvider";
 import EmbedsRefresher from "@/components/EmbedsRefresher";
+import Script from "next/script"; // <-- 1. Import Next.js Script
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,6 +62,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
+        {/* 2. ADD YOUR GOOGLE AUTO ADS SCRIPT HERE */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3207230642900815" 
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-black text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>

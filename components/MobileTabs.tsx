@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getPostPath } from '@/lib/wp';
 import Image from 'next/image';
+import AdBanner from '@/components/AdBanner'; // <-- 1. IMPORT ADBANNER
 
 export default function MobileTabs({
   latest,
@@ -92,10 +93,8 @@ export default function MobileTabs({
       {/* Mobile Sidebar */}
       <div className="flex flex-col gap-6 mt-12 pt-8 border-t border-slate-200 dark:border-zinc-800">
         
-        {/* Ad Placeholder 1 (MREC) */}
-        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-          Advertisement
-        </div>
+        {/* MOBILE AD UNIT 1 */}
+        <AdBanner slotId="YOUR_MOBILE_TAB_SLOT_1" />
 
         {/* Banner 1 */}
         <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
@@ -112,10 +111,8 @@ export default function MobileTabs({
           </a>
         </div>
 
-        {/* Ad Placeholder 2 */}
-        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-          Advertisement
-        </div>
+        {/* MOBILE AD UNIT 2 */}
+        <AdBanner slotId="YOUR_MOBILE_TAB_SLOT_2" />
 
         {/* Banner 2 */}
         <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
@@ -132,10 +129,8 @@ export default function MobileTabs({
           </a>
         </div>
         
-        {/* Ad Placeholder 3 */}
-        <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-          Advertisement
-        </div>
+        {/* MOBILE AD UNIT 3 */}
+        <AdBanner slotId="YOUR_MOBILE_TAB_SLOT_3" />
 
       </div>
 

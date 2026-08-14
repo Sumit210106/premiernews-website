@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { decodeHtml, getImageUrl, getPostPath } from '@/lib/wp';
 import Comments from '@/components/Comments';
+import AdBanner from '@/components/AdBanner'; // <-- 1. IMPORT ADBANNER COMPONENT
 
 export async function generateMetadata({ 
   params 
@@ -175,6 +176,11 @@ export default async function SinglePostPage({
               />
             </div>
 
+            {/* 2. AD UNIT ABOVE ARTICLE CONTENT */}
+            <div className="w-full max-w-3xl">
+              <AdBanner slotId="YOUR_ABOVE_ARTICLE_SLOT_ID" />
+            </div>
+
             <div className="w-full max-w-3xl">
               <div 
                 suppressHydrationWarning
@@ -199,6 +205,11 @@ export default async function SinglePostPage({
               />
             </div>
 
+            {/* 3. AD UNIT BELOW ARTICLE CONTENT */}
+            <div className="w-full max-w-3xl">
+              <AdBanner slotId="YOUR_BELOW_ARTICLE_SLOT_ID" />
+            </div>
+
             {tags.length > 0 && (
               <div className="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-800 max-w-3xl">
                 <h4 className="text-xs font-semibold uppercase tracking-widest text-slate-900 dark:text-white mb-3">Tags in this story</h4>
@@ -217,7 +228,7 @@ export default async function SinglePostPage({
                 <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">Recommended For You</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {recommendedPosts.map((recPost: any) => (
-                    <Link href={getPostPath(recPost)} key={recPost.id} className="group flex flex-col gap-3">
+                    <a href={getPostPath(recPost)} key={recPost.id} className="group flex flex-col gap-3">
                       <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
                         <Image 
                           src={getImageUrl(recPost)} 
@@ -230,7 +241,7 @@ export default async function SinglePostPage({
                       <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-[#00ff85] transition-colors line-clamp-3">
                         {decodeHtml(recPost.title.rendered)}
                       </h4>
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -241,9 +252,9 @@ export default async function SinglePostPage({
           </div>
 
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
-            <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-              Advertisement
-            </div>
+            
+            {/* 4. AD UNIT: SIDEBAR TOP */}
+            <AdBanner slotId="YOUR_SIDEBAR_TOP_SLOT_ID" />
 
             {sidebarPosts.length > 0 && (
               <div className="bg-white dark:bg-zinc-950 rounded-2xl p-6 border border-slate-200 dark:border-zinc-800 shadow-sm">
@@ -252,7 +263,7 @@ export default async function SinglePostPage({
                   {sidebarPosts.map((sp: any, idx: number) => {
                     const spDate = new Date(sp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     return (
-                      <Link href={getPostPath(sp)} key={sp.id} className="group flex gap-4 items-start">
+                      <a href={getPostPath(sp)} key={sp.id} className="group flex gap-4 items-start">
                         <span className="text-3xl md:text-4xl font-bold text-slate-200 dark:text-zinc-800 leading-none mt-1 group-hover:text-[#4a0e4e] dark:group-hover:text-[#00ff85] transition-colors">
                           {String(idx + 1).padStart(2, '0')}
                         </span>
@@ -262,16 +273,15 @@ export default async function SinglePostPage({
                           </h4>
                           <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium tracking-wide">{spDate}</span>
                         </div>
-                      </Link>
+                      </a>
                     );
                   })}
                 </div>
               </div>
             )}
 
-            <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
-              Advertisement
-            </div>
+            {/* 5. AD UNIT: SIDEBAR BOTTOM */}
+            <AdBanner slotId="YOUR_SIDEBAR_BOTTOM_SLOT_ID" />
 
             <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
               <a href="https://www.sportwettenschweiz.org" target="_blank" rel="noopener noreferrer">
