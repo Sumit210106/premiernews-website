@@ -1,8 +1,62 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import { decodeHtml, getPostPath, Post } from '@/lib/wp';
 import CategorySection from '@/components/CategorySection';
+
+// 1. Dynamic SEO Metadata Generator for Category Archives
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> | any 
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  try {
+    const catRes = await fetch(
+      `https://premierleaguenewsnow.com/wp-json/wp/v2/categories?slug=${slug}`,
+      { next: { revalidate: 300 } }
+    );
+    const categories = await catRes.json();
+    if (!categories || categories.length === 0) return { title: 'Category News' };
+
+    const category = categories[0];
+    const seo = category.aioseo_head_json;
+
+    if (!seo) {
+      return { 
+        title: decodeHtml(category.name),
+        description: category.description || `Latest ${decodeHtml(category.name)} news and updates.`,
+      };
+    }
+
+    return {
+      title: seo.title || decodeHtml(category.name),
+      description: seo.description || category.description,
+      keywords: seo.keywords ? seo.keywords.split(',') : [],
+      alternates: {
+        canonical: seo.canonical_url || `/category/${slug}`,
+      },
+      openGraph: {
+        title: seo["og:title"] || seo.title || decodeHtml(category.name),
+        description: seo["og:description"] || seo.description || category.description,
+        url: seo["og:url"] || `/category/${slug}`,
+        images: seo["og:image"] ? [{ url: seo["og:image"] }] : [],
+        type: "website",
+      },
+      twitter: {
+        card: (seo["twitter:card"] as any) || "summary_large_image",
+        title: seo["twitter:title"] || seo.title || decodeHtml(category.name),
+        description: seo["twitter:description"] || seo.description || category.description,
+        images: seo["twitter:image"] ? [seo["twitter:image"]] : [],
+      }
+    };
+  } catch {
+    return { title: 'Category News' };
+  }
+}
 
 export default async function CategoryArchivePage({ 
   params 
@@ -18,9 +72,9 @@ export default async function CategoryArchivePage({
   if (!categories || categories.length === 0) return notFound();
   const category = categories[0];
 
-  // 2. Extract SEO Meta Data (Yoast SEO support with native fallbacks)
-  const seoTitle = category.yoast_head_json?.title || category.name;
-  const seoDescription = category.yoast_head_json?.description || category.description || '';
+  // 2. Dynamic Title & Description from AIOSEO
+  const seoTitle = category.aioseo_head_json?.title || category.name;
+  const seoDescription = category.aioseo_head_json?.description || category.description || '';
 
   // 3. Fetch initial posts for this category
   const postsRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&categories=${category.id}&per_page=10`);
@@ -37,6 +91,14 @@ export default async function CategoryArchivePage({
 
   return (
     <main className="bg-white dark:bg-zinc-950 pb-20 pt-8">
+      {/* Dynamic Schema Injection */}
+      {category.aioseo_head_json?.schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(category.aioseo_head_json.schema) }}
+        />
+      )}
+
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
@@ -48,12 +110,12 @@ export default async function CategoryArchivePage({
               categoryId={category.id}
               initialGridPosts={initialPosts}
               layout="list"
-              showCategoryTag={false} // Hidden inside archives
-              showDate={false}        // Hidden inside archives
+              showCategoryTag={false}
+              showDate={false}
             />
           </div>
 
-          {/* RIGHT SIDEBAR (Identical to Single Post) */}
+          {/* RIGHT SIDEBAR */}
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
             <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 text-xs font-semibold tracking-widest uppercase shadow-inner">
               Advertisement

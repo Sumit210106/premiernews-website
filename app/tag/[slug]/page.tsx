@@ -1,8 +1,62 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import { decodeHtml, getPostPath, Post } from '@/lib/wp';
 import CategorySection from '@/components/CategorySection';
+
+// 1. Dynamic SEO Metadata Generator for Tag / Club Archives
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> | any 
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  try {
+    const tagRes = await fetch(
+      `https://premierleaguenewsnow.com/wp-json/wp/v2/tags?slug=${slug}`,
+      { next: { revalidate: 300 } }
+    );
+    const tags = await tagRes.json();
+    if (!tags || tags.length === 0) return { title: 'Tag News' };
+
+    const tag = tags[0];
+    const seo = tag.aioseo_head_json;
+
+    if (!seo) {
+      return { 
+        title: decodeHtml(tag.name),
+        description: tag.description || `Read the latest ${decodeHtml(tag.name)} news and updates.`,
+      };
+    }
+
+    return {
+      title: seo.title || decodeHtml(tag.name),
+      description: seo.description || tag.description,
+      keywords: seo.keywords ? seo.keywords.split(',') : [],
+      alternates: {
+        canonical: seo.canonical_url || `/tag/${slug}`,
+      },
+      openGraph: {
+        title: seo["og:title"] || seo.title || decodeHtml(tag.name),
+        description: seo["og:description"] || seo.description || tag.description,
+        url: seo["og:url"] || `/tag/${slug}`,
+        images: seo["og:image"] ? [{ url: seo["og:image"] }] : [],
+        type: "website",
+      },
+      twitter: {
+        card: (seo["twitter:card"] as any) || "summary_large_image",
+        title: seo["twitter:title"] || seo.title || decodeHtml(tag.name),
+        description: seo["twitter:description"] || seo.description || tag.description,
+        images: seo["twitter:image"] ? [seo["twitter:image"]] : [],
+      }
+    };
+  } catch {
+    return { title: 'Tag News' };
+  }
+}
 
 export default async function TagArchivePage({ 
   params 
@@ -18,9 +72,9 @@ export default async function TagArchivePage({
   if (!tags || tags.length === 0) return notFound();
   const tag = tags[0];
 
-  // 2. Extract SEO Meta Data (Yoast SEO support with native fallbacks)
-  const seoTitle = tag.yoast_head_json?.title || tag.name;
-  const seoDescription = tag.yoast_head_json?.description || tag.description || '';
+  // 2. Dynamic Title & Description from AIOSEO
+  const seoTitle = tag.aioseo_head_json?.title || tag.name;
+  const seoDescription = tag.aioseo_head_json?.description || tag.description || '';
 
   // 3. Fetch initial posts for this tag
   const postsRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&tags=${tag.id}&per_page=10`);
@@ -37,6 +91,14 @@ export default async function TagArchivePage({
 
   return (
     <main className="bg-white dark:bg-zinc-950 pb-20 pt-8">
+      {/* Dynamic Schema Injection */}
+      {tag.aioseo_head_json?.schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(tag.aioseo_head_json.schema) }}
+        />
+      )}
+
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
@@ -48,12 +110,12 @@ export default async function TagArchivePage({
               tagId={tag.id}
               initialGridPosts={initialPosts}
               layout="list"
-              showCategoryTag={false} // Hidden inside archives
-              showDate={false}        // Hidden inside archives
+              showCategoryTag={false}
+              showDate={false}
             />
           </div>
 
-          {/* RIGHT SIDEBAR (Identical to Single Post) */}
+          {/* RIGHT SIDEBAR */}
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
             <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 text-xs font-semibold tracking-widest uppercase shadow-inner">
               Advertisement

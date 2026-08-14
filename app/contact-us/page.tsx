@@ -1,13 +1,56 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import { decodeHtml, getPostPath, Post } from '@/lib/wp';
 
-export default async function StaticPage() {
-  // 1. CHANGE THIS SLUG FOR EACH PAGE ("about-us", "contact-us", "write-for-us", "privacy-policy")
-  const slug = "contact-us"; 
+// 1. Dynamic SEO Metadata Generator for Contact Us
+export async function generateMetadata(): Promise<Metadata> {
+  const slug = "contact-us";
+  try {
+    const res = await fetch(
+      `https://premierleaguenewsnow.com/wp-json/wp/v2/pages?_embed&slug=${slug}`,
+      { next: { revalidate: 3600 } }
+    );
+    const pages = await res.json();
+    if (!pages || pages.length === 0) return { title: 'Contact Us' };
 
-  // 2. Fetch the Page Content
+    const page = pages[0];
+    const seo = page.aioseo_head_json;
+
+    if (!seo) {
+      return { title: decodeHtml(page.title?.rendered || 'Contact Us') };
+    }
+
+    return {
+      title: seo.title || decodeHtml(page.title.rendered),
+      description: seo.description,
+      keywords: seo.keywords ? seo.keywords.split(',') : [],
+      alternates: {
+        canonical: seo.canonical_url || '/contact-us',
+      },
+      openGraph: {
+        title: seo["og:title"] || seo.title,
+        description: seo["og:description"] || seo.description,
+        url: seo["og:url"] || '/contact-us',
+        images: seo["og:image"] ? [{ url: seo["og:image"] }] : [],
+        type: "website",
+      },
+      twitter: {
+        card: (seo["twitter:card"] as any) || "summary_large_image",
+        title: seo["twitter:title"] || seo.title,
+        description: seo["twitter:description"] || seo.description,
+        images: seo["twitter:image"] ? [seo["twitter:image"]] : [],
+      }
+    };
+  } catch {
+    return { title: 'Contact Us' };
+  }
+}
+
+export default async function StaticPage() {
+  const slug = "contact-us"; 
+  
   const res = await fetch(
     `https://premierleaguenewsnow.com/wp-json/wp/v2/pages?_embed&slug=${slug}`, 
     { next: { revalidate: 3600 } }
@@ -17,7 +60,6 @@ export default async function StaticPage() {
   if (!pages || pages.length === 0) return notFound();
   const page = pages[0];
 
-  // 3. Fetch Sidebar Posts (Recommended Stories)
   let sidebarPosts: Post[] = [];
   try {
     const sbRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&per_page=6&categories=7,8`);
@@ -28,20 +70,25 @@ export default async function StaticPage() {
 
   return (
     <main className="bg-white dark:bg-zinc-950 pb-20 pt-8 min-h-[70vh]">
+      {/* Dynamic Schema Injection */}
+      {page.aioseo_head_json?.schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(page.aioseo_head_json.schema) }}
+        />
+      )}
+
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* LEFT COLUMN - Main Page Content */}
           <div className="lg:col-span-8 flex flex-col">
-            
-            {/* Page Header (Tightened Spacing) */}
             <header className="mb-6 border-b border-slate-100 dark:border-zinc-800 pb-4">
               <h1 className="text-3xl sm:text-4xl md:text-[42px] font-black text-slate-900 dark:text-white leading-[1.15] mb-2">
                 {decodeHtml(page.title.rendered)}
               </h1>
             </header>
 
-            {/* Typography Engine (Added [&>*:first-child]:mt-0 to fix the gap) */}
             <article 
               className="w-full max-w-none text-slate-800 dark:text-slate-200
                 [&>*:first-child]:mt-0
@@ -64,15 +111,12 @@ export default async function StaticPage() {
             />
           </div>
 
-          {/* RIGHT SIDEBAR (Cleaned up) */}
+          {/* RIGHT SIDEBAR */}
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
-            
-            {/* Top Advertisement Placeholder */}
             <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 text-xs font-semibold tracking-widest uppercase shadow-inner">
               Advertisement
             </div>
 
-            {/* Recommended Stories Widget */}
             {sidebarPosts.length > 0 && (
               <div className="bg-white dark:bg-zinc-950 rounded-2xl p-6 border border-slate-200 dark:border-zinc-800 shadow-sm">
                 <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6 pb-4 border-b border-slate-100 dark:border-zinc-800">
@@ -101,7 +145,6 @@ export default async function StaticPage() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </main>

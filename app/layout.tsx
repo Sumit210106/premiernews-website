@@ -8,10 +8,8 @@ import { ThemeProvider } from "next-themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Premier League News Now | Latest Football News & Updates",
-    template: "%s | Premier League News Now"
-  },
+  metadataBase: new URL("https://premierleaguenewsnow.com"),
+  title: "Premier League News Now | Latest Football News & Updates",
   description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
   keywords: ["Premier League", "Football News", "EPL", "Soccer", "Transfer News", "Latest Updates"],
   authors: [{ name: "Premier League News Now" }],
@@ -22,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Premier League News Now | Latest Football News & Updates",
     description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
-    url: "https://premierleaguenewsnow.com",
+    url: "/",
     siteName: "Premier League News Now",
     images: [
       {
@@ -39,6 +37,17 @@ export const metadata: Metadata = {
     title: "Premier League News Now | Latest Football News & Updates",
     description: "Stay up to date with the most exciting stories, breaking news, and exclusive insights from the world of football and the Premier League.",
     images: ["https://premierleaguenewsnow.com/wp-content/uploads/2024/05/Bruno-Guimaraes-Arsenal-Transfer.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

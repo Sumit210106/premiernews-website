@@ -1,8 +1,59 @@
 import React from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import { decodeHtml, getImageUrl, getPostPath } from '@/lib/wp';
-import ArticleContent from '@/components/ArticleContent'; // <-- Imported here
+import Comments from '@/components/Comments';
+
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ year: string, month: string, day: string, slug: string }> | any 
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  const res = await fetch(
+    `https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&slug=${slug}`,
+    { next: { revalidate: 300 } }
+  );
+
+  if (!res.ok) return {};
+  const posts = await res.json();
+  if (!posts || posts.length === 0) return {};
+
+  const post = posts[0];
+  const seo = post.aioseo_head_json;
+
+  if (!seo) {
+    return { title: decodeHtml(post.title?.rendered || 'Article') };
+  }
+
+  return {
+    title: seo.title || decodeHtml(post.title.rendered),
+    description: seo.description,
+    keywords: seo.keywords ? seo.keywords.split(',') : [],
+    alternates: {
+      canonical: seo.canonical_url,
+    },
+    openGraph: {
+      title: seo["og:title"] || seo.title,
+      description: seo["og:description"] || seo.description,
+      url: seo["og:url"],
+      images: seo["og:image"] ? [{ url: seo["og:image"] }] : [],
+      type: "article",
+      publishedTime: seo["article:published_time"],
+      modifiedTime: seo["article:modified_time"],
+    },
+    twitter: {
+      card: seo["twitter:card"] as any || "summary_large_image",
+      title: seo["twitter:title"] || seo.title,
+      description: seo["twitter:description"] || seo.description,
+      images: seo["twitter:image"] ? [seo["twitter:image"]] : [],
+    }
+  };
+}
 
 export default async function SinglePostPage({ 
   params 
@@ -49,12 +100,26 @@ export default async function SinglePostPage({
 
   return (
     <main className="bg-white dark:bg-zinc-950 pb-20 pt-8">
+      
+      {/* INJECT JSON-LD SCHEMA FROM AIOSEO */}
+      {post.aioseo_head_json?.schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(post.aioseo_head_json.schema) }}
+        />
+      )}
+
+      {/* GLOBAL EMBED SCRIPTS */}
+      <Script src="https://platform.twitter.com/widgets.js" strategy="afterInteractive" />
+      <Script src="https://www.instagram.com/embed.js" strategy="afterInteractive" />
+      <Script src="https://embed-cdn.gettyimages.com/widgets/e.js" strategy="afterInteractive" />
+      <Script src="https://static.smartframe.io/embed.js" strategy="afterInteractive" />
+
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           <div className="lg:col-span-8 flex flex-col">
             
-            {/* Breadcrumbs */}
             <nav className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mb-6 font-semibold uppercase tracking-wider">
               <Link href="/" className="hover:text-[#4a0e4e] dark:hover:text-[#00ff85] transition-colors">Home</Link>
               <span>/</span>
@@ -71,7 +136,6 @@ export default async function SinglePostPage({
               </span>
             </nav>
 
-            {/* Post Header */}
             <header className="mb-6 border-b border-slate-100 dark:border-zinc-800 pb-6">
               <div className="flex gap-2 flex-wrap mb-4">
                 {categories.map((cat: any) => (
@@ -99,13 +163,8 @@ export default async function SinglePostPage({
               <img src={getImageUrl(post)} alt={decodeHtml(post.title.rendered)} className="w-full h-auto rounded-xl shadow-sm bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800" />
             </div>
 
-            {/* 
-              ARTICLE CONTENT: 
-              Using the new Client Component with the EXACT font styling from your screenshot.
-            */}
             <div className="w-full max-w-3xl">
-              <ArticleContent 
-                html={post.content.rendered}
+              <div 
                 className="mt-6 text-slate-700 dark:text-slate-300 
                   [&_p]:text-[15px] md:[&_p]:text-base [&_p]:leading-[1.75] [&_p]:mb-5
                   [&_h1]:text-2xl md:[&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:text-slate-900 [&_h1]:dark:text-slate-50 [&_h1]:mt-8 [&_h1]:mb-4 
@@ -115,11 +174,18 @@ export default async function SinglePostPage({
                   [&_li]:mb-2 [&_li]:text-[15px] md:[&_li]:text-base [&_li]:leading-[1.75]
                   [&_a]:text-[#4a0e4e] [&_a]:dark:text-[#00ff85] hover:[&_a]:opacity-85 [&_a]:underline 
                   [&_blockquote]:border-l-4 [&_blockquote]:border-[#4a0e4e] dark:[&_blockquote]:border-[#00ff85] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-6 [&_blockquote]:text-slate-500 
-                  [&_img]:rounded-xl [&_img]:my-6 [&_img]:shadow-sm"
+                  
+                  [&_table]:w-full [&_table]:my-8 [&_table]:border-collapse [&_table]:border [&_table]:border-slate-300 [&_table]:dark:border-zinc-700
+                  [&_th]:p-3 [&_th]:border [&_th]:border-slate-300 [&_th]:dark:border-zinc-700 [&_th]:bg-slate-50 [&_th]:dark:bg-zinc-800/50 [&_th]:font-semibold [&_th]:text-left
+                  [&_td]:p-3 [&_td]:border [&_td]:border-slate-300 [&_td]:dark:border-zinc-700
+                  
+                  [&_img]:rounded-xl [&_img]:my-6 [&_img]:shadow-sm
+                  
+                  [&_smartframe-embed]:!block [&_smartframe-embed]:!w-full [&_smartframe-embed]:!h-auto [&_smartframe-embed]:my-6"
+                dangerouslySetInnerHTML={{ __html: decodeHtml(post.content.rendered) }}
               />
             </div>
 
-            {/* Tags Section */}
             {tags.length > 0 && (
               <div className="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-800 max-w-3xl">
                 <h4 className="text-xs font-semibold uppercase tracking-widest text-slate-900 dark:text-white mb-3">Tags in this story</h4>
@@ -133,7 +199,6 @@ export default async function SinglePostPage({
               </div>
             )}
 
-            {/* Bottom Recommended Posts */}
             {recommendedPosts.length > 0 && (
               <div className="mt-12 pt-8 border-t-4 border-slate-900 dark:border-white max-w-3xl">
                 <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">Recommended For You</h3>
@@ -152,9 +217,12 @@ export default async function SinglePostPage({
               </div>
             )}
 
+            {/* --- ADD THE NEW COMMENTS SECTION HERE --- */}
+            <Comments postId={post.id} />
+            {/* --------------------------------------- */}
+
           </div>
 
-          {/* RIGHT SIDEBAR */}
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
             <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-center h-[250px] border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-slate-500 text-xs font-semibold tracking-widest uppercase shadow-inner">
               Advertisement
