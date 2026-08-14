@@ -11,8 +11,9 @@ import AdBanner from '@/components/AdBanner'; // <-- 1. IMPORT ADBANNER COMPONEN
 export async function generateStaticParams() {
   try {
     const res = await fetch('https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_fields=date,slug&per_page=50');
-    if (!res.ok) return [];
+    if (!res.ok) return [{ year: '2026', month: '08', day: '14', slug: 'latest-news' }];
     const posts = await res.json();
+    if (!Array.isArray(posts) || posts.length === 0) return [{ year: '2026', month: '08', day: '14', slug: 'latest-news' }];
     return posts.map((post: any) => {
       const dateObj = new Date(post.date);
       return {
@@ -23,7 +24,7 @@ export async function generateStaticParams() {
       };
     });
   } catch {
-    return [];
+    return [{ year: '2026', month: '08', day: '14', slug: 'latest-news' }];
   }
 }
 

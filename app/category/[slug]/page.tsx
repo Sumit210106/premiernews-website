@@ -8,11 +8,12 @@ import CategorySection from '@/components/CategorySection';
 export async function generateStaticParams() {
   try {
     const res = await fetch('https://premierleaguenewsnow.com/wp-json/wp/v2/categories?_fields=slug&per_page=100');
-    if (!res.ok) return [];
+    if (!res.ok) return [{ slug: 'news' }];
     const categories = await res.json();
+    if (!Array.isArray(categories) || categories.length === 0) return [{ slug: 'news' }];
     return categories.map((cat: any) => ({ slug: cat.slug }));
   } catch {
-    return [];
+    return [{ slug: 'news' }];
   }
 }
 

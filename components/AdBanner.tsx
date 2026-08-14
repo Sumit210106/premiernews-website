@@ -10,9 +10,10 @@ export default function AdBanner({ slotId }: AdBannerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pushed = useRef(false);
 
+  const isPlaceholder = !slotId || slotId.startsWith('YOUR_');
+
   useEffect(() => {
-    // Prevent double-pushing in React Strict Mode or re-renders
-    if (pushed.current) return;
+    if (isPlaceholder || pushed.current) return;
 
     let observer: IntersectionObserver | null = null;
 
@@ -24,7 +25,7 @@ export default function AdBanner({ slotId }: AdBannerProps) {
             ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
           }
         } catch (error: any) {
-          console.warn("AdSense warning:", error.message);
+          // Ignore AdSense push warnings
         }
         if (observer) observer.disconnect();
       }
@@ -49,7 +50,15 @@ export default function AdBanner({ slotId }: AdBannerProps) {
     return () => {
       if (observer) observer.disconnect();
     };
-  }, [slotId]);
+  }, [slotId, isPlaceholder]);
+
+  if (isPlaceholder) {
+    return (
+      <div className="w-full overflow-hidden my-6 flex items-center justify-center bg-slate-50 dark:bg-zinc-900/40 border border-slate-200 dark:border-zinc-800/80 rounded-xl min-h-[100px] text-slate-400 text-xs font-semibold tracking-widest uppercase shadow-inner">
+        <span>Advertisement</span>
+      </div>
+    );
+  }
 
   return (
     <div 

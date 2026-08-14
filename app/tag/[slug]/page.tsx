@@ -8,11 +8,12 @@ import CategorySection from '@/components/CategorySection';
 export async function generateStaticParams() {
   try {
     const res = await fetch('https://premierleaguenewsnow.com/wp-json/wp/v2/tags?_fields=slug&per_page=100');
-    if (!res.ok) return [];
+    if (!res.ok) return [{ slug: 'premier-league' }];
     const tags = await res.json();
+    if (!Array.isArray(tags) || tags.length === 0) return [{ slug: 'premier-league' }];
     return tags.map((tag: any) => ({ slug: tag.slug }));
   } catch {
-    return [];
+    return [{ slug: 'premier-league' }];
   }
 }
 

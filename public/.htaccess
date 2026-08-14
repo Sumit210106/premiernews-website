@@ -7,16 +7,20 @@
   RewriteCond %{REQUEST_FILENAME} \.php$
   RewriteRule ^ - [L]
 
-  # 2. Serve existing static files & assets (CSS, JS, images)
+  # 2. Serve existing static files & assets directly (CSS, JS, images)
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 3. Map clean Next.js URLs to pre-rendered HTML files (e.g. /about-us -> /about-us.html)
+  # 3. Next.js Static Export Directory Index matching (e.g. /path/ -> /path/index.html)
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^(.*)$ /$1/index.html [L]
+
+  # 4. Next.js Static Export clean HTML matching (e.g. /path -> /path.html)
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.*)$ /$1.html [L]
 
-  # 4. Fallback for unmatched routes to 404 page
+  # 5. Fallback for unmatched routes to 404 page
   RewriteCond %{DOCUMENT_ROOT}/404.html -f
   RewriteRule ^(.*)$ /404.html [L]
 </IfModule>
