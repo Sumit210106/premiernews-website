@@ -77,13 +77,14 @@ export default async function TagArchivePage({
   const seoDescription = tag.aioseo_head_json?.description || tag.description || '';
 
   // 3. Fetch initial posts for this tag
-  const postsRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&tags=${tag.id}&per_page=10`);
+  const WP_FIELDS = "_fields=id,date,link,slug,title,excerpt,_links,_embedded.wp:featuredmedia,_embedded.wp:term";
+  const postsRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&${WP_FIELDS}&tags=${tag.id}&per_page=10`);
   const initialPosts = await postsRes.json();
 
   // 4. Fetch Sidebar Posts
   let sidebarPosts: Post[] = [];
   try {
-    const sbRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&per_page=6&categories=7,8`);
+    const sbRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&${WP_FIELDS}&per_page=6&categories=7,8`);
     if (sbRes.ok) sidebarPosts = await sbRes.json();
   } catch (error) {
     console.error("Failed to load sidebar posts", error);

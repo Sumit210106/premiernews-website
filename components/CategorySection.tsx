@@ -87,12 +87,13 @@ export default function CategorySection({
       
       {/* Title & SEO Description Block */}
       <div className="flex flex-col mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-2 h-8 bg-[#4a0e4e] dark:bg-accent rounded-sm shrink-0"></div>
-          <h2 className="text-2xl sm:text-3xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white shrink-0">
-            {title}
-          </h2>
-          <div className="h-px bg-slate-200 dark:bg-zinc-800 flex-grow"></div>
+        <div className="flex items-start gap-3.5">
+          <div className="w-2 self-stretch min-h-[32px] bg-[#4a0e4e] dark:bg-[#00ff85] rounded-sm shrink-0 mt-0.5"></div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase italic tracking-tight text-slate-900 dark:text-white line-clamp-2 leading-tight">
+              {title}
+            </h2>
+          </div>
         </div>
         {description && (
           <div 

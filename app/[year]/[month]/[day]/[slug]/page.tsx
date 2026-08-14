@@ -85,16 +85,17 @@ export default async function SinglePostPage({
   const authorAvatar = authorData?.avatar_urls?.['96'] || authorData?.avatar_urls?.['48'] || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=4a0e4e&color=fff`;
 
   let recommendedPosts = [];
+  const WP_FIELDS = "_fields=id,date,link,slug,title,excerpt,_links,_embedded.wp:featuredmedia,_embedded.wp:term";
   try {
     const tagIds = tags.map((t: any) => t.id).join(',');
     const queryParam = tagIds ? `tags=${tagIds}` : `categories=${primaryCategory?.id || ''}`;
-    const recRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&per_page=3&exclude=${post.id}&${queryParam}`, { next: { revalidate: 300 } });
+    const recRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&${WP_FIELDS}&per_page=3&exclude=${post.id}&${queryParam}`, { next: { revalidate: 300 } });
     if (recRes.ok) recommendedPosts = await recRes.json();
   } catch (error) {}
 
   let sidebarPosts = [];
   try {
-    const sbRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&per_page=6&categories=7,8&exclude=${post.id}`, { next: { revalidate: 300 } });
+    const sbRes = await fetch(`https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_embed&${WP_FIELDS}&per_page=6&categories=7,8&exclude=${post.id}`, { next: { revalidate: 300 } });
     if (sbRes.ok) sidebarPosts = await sbRes.json();
   } catch (error) {}
 

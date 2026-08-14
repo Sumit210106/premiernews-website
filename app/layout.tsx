@@ -62,6 +62,51 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
+        {/* Performance Resource Hints: DNS Prefetch & Preconnect */}
+        <link rel="preconnect" href="https://premierleaguenewsnow.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://premierleaguenewsnow.com" />
+        <link rel="preconnect" href="https://ssl.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://ssl.gstatic.com" />
+
+        {/* Global Structured Data / Schema.org for Organization & SearchAction */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://premierleaguenewsnow.com/#website",
+                  "url": "https://premierleaguenewsnow.com/",
+                  "name": "Premier League News Now",
+                  "description": "Latest Football News & Updates",
+                  "potentialAction": [
+                    {
+                      "@type": "SearchAction",
+                      "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": "https://premierleaguenewsnow.com/search?q={search_term_string}"
+                      },
+                      "query-input": "required name=search_term_string"
+                    }
+                  ]
+                },
+                {
+                  "@type": "Organization",
+                  "@id": "https://premierleaguenewsnow.com/#organization",
+                  "name": "Premier League News Now",
+                  "url": "https://premierleaguenewsnow.com/",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://premierleaguenewsnow.com/wp-content/uploads/2025/05/premier-league-news-now-logo-white.png"
+                  }
+                }
+              ]
+            })
+          }}
+        />
+
         {/* Google Auto Ads Script loaded lazily to preserve mobile PageSpeed */}
         <Script
           async
