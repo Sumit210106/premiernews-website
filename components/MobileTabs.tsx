@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { getPostPath } from '@/lib/wp';
+import Image from 'next/image';
 
 export default function MobileTabs({
   latest,
@@ -17,7 +17,7 @@ export default function MobileTabs({
 }) {
   const [activeTab, setActiveTab] = useState('latest');
 
-  // NEW: Instantly snap back to the top of the page when switching tabs
+  // Instantly snap back to the top of the page when switching tabs
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeTab]);
@@ -52,17 +52,25 @@ export default function MobileTabs({
 
       {/* Tab Content List */}
       <div className="flex flex-col min-h-[50vh]">
-        {activeData.map((post: any) => {
+        {activeData.map((post: any, index: number) => {
           const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/150';
 
           return (
-            <Link 
+            <a 
               href={getPostPath(post)} 
               key={post.id} 
               className="flex gap-4 py-4 border-b border-slate-100 dark:border-zinc-800/60 items-start active:bg-slate-50 dark:active:bg-zinc-900 transition-colors"
             >
-              <div className="w-[110px] h-[80px] shrink-0 overflow-hidden bg-slate-100 dark:bg-zinc-800 rounded">
-                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
+              {/* Optimized Next.js Image Component */}
+              <div className="relative w-[110px] h-[80px] shrink-0 overflow-hidden bg-slate-100 dark:bg-zinc-800 rounded">
+                <Image 
+                  src={imageUrl} 
+                  alt={post.title.rendered.replace(/<[^>]+>/g, '') || "Article thumbnail"} 
+                  fill
+                  sizes="(max-width: 768px) 110px, 110px"
+                  priority={index < 3} // Loads top 3 images instantly for LCP boost
+                  className="object-cover" 
+                />
               </div>
               
               <div className="flex flex-col justify-center pt-0.5">
@@ -71,7 +79,7 @@ export default function MobileTabs({
                   dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                 />
               </div>
-            </Link>
+            </a>
           );
         })}
         {activeData.length === 0 && (
@@ -81,7 +89,7 @@ export default function MobileTabs({
         )}
       </div>
 
-      {/* Mobile Sidebar (Matches Desktop HomeClient.tsx precisely) */}
+      {/* Mobile Sidebar */}
       <div className="flex flex-col gap-6 mt-12 pt-8 border-t border-slate-200 dark:border-zinc-800">
         
         {/* Ad Placeholder 1 (MREC) */}
@@ -90,13 +98,17 @@ export default function MobileTabs({
         </div>
 
         {/* Banner 1 */}
-        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
           <a href="https://www.sportwettenschweiz.org" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" 
-              alt="SportwettenSchweiz" 
-              className="w-full h-auto object-cover"
-            />
+            <div className="relative w-full aspect-[300/250]">
+              <Image 
+                src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" 
+                alt="SportwettenSchweiz" 
+                fill
+                sizes="(max-width: 768px) 100vw, 300px"
+                className="object-cover"
+              />
+            </div>
           </a>
         </div>
 
@@ -106,13 +118,17 @@ export default function MobileTabs({
         </div>
 
         {/* Banner 2 */}
-        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+        <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
           <a href="https://www.schweizersportwetten.info/" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" 
-              alt="sportwetten-schweiz" 
-              className="w-full h-auto object-cover"
-            />
+            <div className="relative w-full aspect-[300/250]">
+              <Image 
+                src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" 
+                alt="sportwetten-schweiz" 
+                fill
+                sizes="(max-width: 768px) 100vw, 300px"
+                className="object-cover"
+              />
+            </div>
           </a>
         </div>
         

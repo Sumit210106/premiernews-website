@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Post, decodeHtml, getImageUrl, getCategories, getPostPath } from '../lib/wp';
+import Image from 'next/image';
 
 interface CategorySectionProps {
   title: string;
@@ -109,12 +110,14 @@ export default function CategorySection({
               key={post.id} 
               className="group relative bg-white dark:bg-zinc-900 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex flex-col md:flex-row"
             >
-              {/* Image */}
-              <div className="relative w-full md:w-[35%] h-[180px] md:h-auto shrink-0 overflow-hidden z-0 pointer-events-none">
-                <img 
+              {/* Optimized Image */}
+              <div className="relative w-full md:w-[35%] h-[180px] md:h-auto shrink-0 overflow-hidden z-0 pointer-events-none bg-slate-100 dark:bg-zinc-800">
+                <Image 
                   src={getImageUrl(post)} 
-                  alt={decodeHtml(post.title.rendered)} 
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  alt={decodeHtml(post.title.rendered).replace(/<[^>]+>/g, '')} 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 35vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
               </div>
               
@@ -148,9 +151,9 @@ export default function CategorySection({
                 )}
                 
                 <h3 className="text-lg md:text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2.5 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors">
-                  <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+                  <a href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
                     {decodeHtml(post.title.rendered)}
-                  </Link>
+                  </a>
                 </h3>
                 
                 <div 
@@ -163,7 +166,7 @@ export default function CategorySection({
         </div>
       )}
 
-      {/* --- NEW COMPACT LAYOUT (2 Columns, Card Box, Image Top, Number Behind Title) --- */}
+      {/* --- NEW COMPACT LAYOUT --- */}
       {layout === 'compact' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {gridPosts.map((post, index) => (
@@ -171,29 +174,27 @@ export default function CategorySection({
               key={post.id} 
               className="group relative bg-white dark:bg-zinc-900 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex flex-col p-4 sm:p-5"
             >
-              {/* Invisible link covering the entire card */}
-              <Link href={getPostPath(post)} className="absolute inset-0 z-20">
+              <a href={getPostPath(post)} className="absolute inset-0 z-20">
                 <span className="sr-only">Read story</span>
-              </Link>
+              </a>
               
-              {/* TOP: Image */}
+              {/* Optimized TOP Image */}
               <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden shadow-sm mb-4 bg-slate-100 dark:bg-zinc-900 z-10 pointer-events-none">
-                <img 
+                <Image 
                   src={getImageUrl(post)} 
-                  alt={decodeHtml(post.title.rendered)} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  alt={decodeHtml(post.title.rendered).replace(/<[^>]+>/g, '')} 
+                  fill
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
-              {/* BOTTOM: Content with Number Behind */}
+              {/* BOTTOM: Content */}
               <div className="relative flex flex-col flex-grow overflow-hidden">
-                
-                {/* Giant Background Number */}
                 <span className="absolute -top-4 -left-2 text-[75px] md:text-[90px] leading-none font-black italic text-slate-100 dark:text-zinc-800/40 z-0 transition-transform duration-500 group-hover:-translate-x-1 group-hover:text-[#4a0e4e]/10 dark:group-hover:text-accent/10 select-none pointer-events-none">
                   {String(index + 1).padStart(2, '0')}
                 </span>
 
-                {/* Content Foreground */}
                 <div className="relative z-10 flex flex-col pt-3 pl-2 pr-2">
                   {showDate && (
                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1.5 block">
@@ -201,12 +202,10 @@ export default function CategorySection({
                     </span>
                   )}
                   
-                  {/* Removed line-clamp-3 so the title fully expands */}
                   <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-slate-100 transition-colors">
                     {decodeHtml(post.title.rendered)}
                   </h3>
                 </div>
-                
               </div>
             </div>
           ))}

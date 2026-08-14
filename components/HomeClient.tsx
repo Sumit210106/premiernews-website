@@ -4,6 +4,7 @@ import React from 'react';
 import HeroGrid from './HeroGrid';
 import CategorySection from './CategorySection';
 import { Post } from '../lib/wp';
+import Image from 'next/image';
 
 interface HomeClientProps {
   initialLatest: Post[];
@@ -81,13 +82,17 @@ export default function HomeClient({
           </div>
 
           {/* Banner 1 */}
-          <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+          <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
             <a href="https://www.sportwettenschweiz.org" target="_blank" rel="noopener noreferrer">
-              <img 
-                src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" 
-                alt="SportwettenSchweiz" 
-                className="w-full h-auto object-cover"
-              />
+              <div className="relative w-full aspect-[300/250]">
+                <Image 
+                  src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" 
+                  alt="SportwettenSchweiz" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 350px"
+                  className="object-cover"
+                />
+              </div>
             </a>
           </div>
 
@@ -97,13 +102,17 @@ export default function HomeClient({
           </div>
 
           {/* Banner 2 */}
-          <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
+          <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800 block">
             <a href="https://www.schweizersportwetten.info/" target="_blank" rel="noopener noreferrer">
-              <img 
-                src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" 
-                alt="sportwetten-schweiz" 
-                className="w-full h-auto object-cover"
-              />
+              <div className="relative w-full aspect-[300/250]">
+                <Image 
+                  src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" 
+                  alt="sportwetten-schweiz" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 350px"
+                  className="object-cover"
+                />
+              </div>
             </a>
           </div>
           

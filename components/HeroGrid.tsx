@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Post, decodeHtml, getImageUrl, getCategories, getPostPath } from '../lib/wp';
 
 interface HeroGridProps {
@@ -16,18 +17,21 @@ export default function HeroGrid({ posts }: HeroGridProps) {
       
       {/* Main Featured Article (Left/Middle) */}
       <div className="lg:col-span-2 flex flex-col bg-white dark:bg-zinc-900 rounded-xl overflow-hidden group border border-slate-200 dark:border-zinc-800 transition-all duration-300 shadow-md h-full relative">
-        <div className="relative w-full flex-grow overflow-hidden h-[300px] lg:min-h-[400px]">
-          <img 
+        <div className="relative w-full flex-grow overflow-hidden h-[300px] lg:min-h-[400px] bg-slate-100 dark:bg-zinc-800">
+          {/* LCP Target: priority=true guarantees this image loads instantly on page visit */}
+          <Image 
             src={getImageUrl(mainPost)} 
-            alt={decodeHtml(mainPost.title.rendered)} 
-            className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.02]"
+            alt={decodeHtml(mainPost.title.rendered).replace(/<[^>]+>/g, '')} 
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            className="object-cover transition-all duration-700 ease-out group-hover:scale-[1.02]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
         </div>
         
         <div className="p-6 md:p-8 flex flex-col shrink-0">
           
-          {/* Clickable Categories (z-30 puts them above the invisible stretched card link) */}
           <div className="flex flex-wrap gap-2 mb-3 relative z-30">
             {getCategories(mainPost)
               .filter(category => category.name.toLowerCase() !== 'latest news')
@@ -42,11 +46,11 @@ export default function HeroGrid({ posts }: HeroGridProps) {
             ))}
           </div>
           
-          {/* Title with CSS stretching trick to cover the whole card */}
+          {/* CHANGED TO NATIVE <a> TAG FOR FULL PAGE RELOAD */}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-4 leading-snug group-hover:text-primary dark:group-hover:text-slate-100 transition-colors">
-            <Link href={getPostPath(mainPost)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+            <a href={getPostPath(mainPost)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
               {decodeHtml(mainPost.title.rendered)}
-            </Link>
+            </a>
           </h2>
           
           <div 
@@ -58,7 +62,7 @@ export default function HeroGrid({ posts }: HeroGridProps) {
 
       {/* Recommended Reads (Right) */}
       <div className="lg:col-span-1 flex flex-col gap-4 h-full">
-        {sidePosts.map((post) => (
+        {sidePosts.map((post, index) => (
           <div 
             key={post.id} 
             className="bg-white dark:bg-zinc-900 text-slate-800 dark:text-slate-300 rounded-xl p-4 flex flex-col justify-center group transition-all duration-300 shadow-sm border border-slate-200 dark:border-zinc-800 flex-grow relative"
@@ -66,7 +70,6 @@ export default function HeroGrid({ posts }: HeroGridProps) {
             <div className="flex gap-4 items-center">
               <div className="flex-1 min-w-0">
                 
-                {/* Clickable Categories */}
                 <div className="flex flex-wrap gap-1.5 mb-2 relative z-30">
                   {getCategories(post)
                     .filter(category => category.name.toLowerCase() !== 'latest news')
@@ -81,11 +84,11 @@ export default function HeroGrid({ posts }: HeroGridProps) {
                   ))}
                 </div>
 
-                {/* Title stretching over card */}
+                {/* CHANGED TO NATIVE <a> TAG FOR FULL PAGE RELOAD */}
                 <h4 className="font-semibold text-sm leading-snug text-slate-800 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-slate-100 transition-colors mb-1.5">
-                  <Link href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
+                  <a href={getPostPath(post)} className="before:absolute before:inset-0 before:z-10 cursor-pointer">
                     {decodeHtml(post.title.rendered)}
-                  </Link>
+                  </a>
                 </h4>
                 
                 <div 
@@ -94,11 +97,14 @@ export default function HeroGrid({ posts }: HeroGridProps) {
                 />
               </div>
               
-              <div className="w-[110px] h-[85px] shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-zinc-800 relative z-20 pointer-events-none">
-                <img 
+              <div className="relative w-[110px] h-[85px] shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-zinc-800 z-20 pointer-events-none">
+                <Image 
                   src={getImageUrl(post)} 
-                  alt={decodeHtml(post.title.rendered)}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  alt={decodeHtml(post.title.rendered).replace(/<[^>]+>/g, '')}
+                  fill
+                  priority={index < 2} 
+                  sizes="110px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
             </div>

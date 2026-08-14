@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { decodeHtml, getImageUrl, getPostPath } from '@/lib/wp';
@@ -109,7 +110,6 @@ export default async function SinglePostPage({
         />
       )}
 
-      {/* GLOBAL EMBED SCRIPTS */}
       <Script src="https://platform.twitter.com/widgets.js" strategy="afterInteractive" />
       <Script src="https://www.instagram.com/embed.js" strategy="afterInteractive" />
       <Script src="https://embed-cdn.gettyimages.com/widgets/e.js" strategy="afterInteractive" />
@@ -150,7 +150,11 @@ export default async function SinglePostPage({
               </h1>
 
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                {authorAvatar && <img src={authorAvatar} alt={decodeHtml(authorName)} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-sm object-cover border border-slate-100 dark:border-zinc-700" />}
+                {authorAvatar && (
+                  <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden shadow-sm border border-slate-100 dark:border-zinc-700">
+                    <Image src={authorAvatar} alt={decodeHtml(authorName)} fill className="object-cover" />
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-medium tracking-wide">
                   <span>By <strong className="text-slate-800 dark:text-slate-200 font-semibold">{decodeHtml(authorName)}</strong></span>
                   <span className="hidden sm:inline text-slate-300 dark:text-zinc-700">•</span>
@@ -159,12 +163,21 @@ export default async function SinglePostPage({
               </div>
             </header>
 
-            <div className="w-full mb-8">
-              <img src={getImageUrl(post)} alt={decodeHtml(post.title.rendered)} className="w-full h-auto rounded-xl shadow-sm bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800" />
+            {/* Optimized Featured Image */}
+            <div className="relative w-full aspect-video mb-8 rounded-xl overflow-hidden shadow-sm bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+              <Image 
+                src={getImageUrl(post)} 
+                alt={decodeHtml(post.title.rendered).replace(/<[^>]+>/g, '')} 
+                fill 
+                priority 
+                sizes="(max-width: 1024px) 100vw, 800px"
+                className="object-cover" 
+              />
             </div>
 
             <div className="w-full max-w-3xl">
               <div 
+                suppressHydrationWarning
                 className="mt-6 text-slate-700 dark:text-slate-300 
                   [&_p]:text-[15px] md:[&_p]:text-base [&_p]:leading-[1.75] [&_p]:mb-5
                   [&_h1]:text-2xl md:[&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:text-slate-900 [&_h1]:dark:text-slate-50 [&_h1]:mt-8 [&_h1]:mb-4 
@@ -205,8 +218,14 @@ export default async function SinglePostPage({
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {recommendedPosts.map((recPost: any) => (
                     <Link href={getPostPath(recPost)} key={recPost.id} className="group flex flex-col gap-3">
-                      <div className="w-full aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
-                        <img src={getImageUrl(recPost)} alt={decodeHtml(recPost.title.rendered)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+                        <Image 
+                          src={getImageUrl(recPost)} 
+                          alt={decodeHtml(recPost.title.rendered).replace(/<[^>]+>/g, '')} 
+                          fill 
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                        />
                       </div>
                       <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-[#4a0e4e] dark:group-hover:text-[#00ff85] transition-colors line-clamp-3">
                         {decodeHtml(recPost.title.rendered)}
@@ -217,9 +236,7 @@ export default async function SinglePostPage({
               </div>
             )}
 
-            {/* --- ADD THE NEW COMMENTS SECTION HERE --- */}
             <Comments postId={post.id} />
-            {/* --------------------------------------- */}
 
           </div>
 
@@ -258,12 +275,16 @@ export default async function SinglePostPage({
 
             <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
               <a href="https://www.sportwettenschweiz.org" target="_blank" rel="noopener noreferrer">
-                <img src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" alt="SportwettenSchweiz" className="w-full h-auto object-cover" />
+                <div className="relative w-full aspect-[300/250]">
+                  <Image src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/SportwettenSchweiz.jpg" alt="SportwettenSchweiz" fill sizes="300px" className="object-cover" />
+                </div>
               </a>
             </div>
             <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-zinc-800">
               <a href="https://www.schweizersportwetten.info/" target="_blank" rel="noopener noreferrer">
-                <img src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" alt="sportwetten-schweiz" className="w-full h-auto object-cover" />
+                <div className="relative w-full aspect-[300/250]">
+                  <Image src="https://premierleaguenewsnow.com/wp-content/uploads/2025/01/sportwetten-schweiz.png" alt="sportwetten-schweiz" fill sizes="300px" className="object-cover" />
+                </div>
               </a>
             </div>
           </div>
