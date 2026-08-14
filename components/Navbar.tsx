@@ -208,7 +208,7 @@ export default function Navbar() {
           </div>
 
           {/* MOBILE MENU BUTTON */}
-          <button className="lg:hidden text-white hover:text-[#00ff85] p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className="lg:hidden text-white hover:text-[#00ff85] p-2" aria-label="Toggle mobile menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />}
             </svg>
@@ -227,7 +227,7 @@ export default function Navbar() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-black/30 border border-white/20 text-white placeholder-white/50 rounded-full py-3 px-6 pr-12 focus:outline-none focus:border-[#00ff85]"
             />
-            <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-[#00ff85]">
+            <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-[#00ff85]" aria-label="Search">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </button>
           </form>
