@@ -25,9 +25,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      # 5. Build the static HTML snapshot of your website
+      # 5. Build the project and export static HTML to ./out/
       - name: Build Project
-        run: npm run build
+        run: npm run build && npm run export
 
       # 6. Take the finished 'out' folder and push it to Hostinger via FTP
       - name: Sync files via FTP
