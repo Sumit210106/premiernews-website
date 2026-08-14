@@ -51,15 +51,43 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function StaticPage() {
   const slug = "about-us"; 
   
-  const res = await fetch(
-    `https://premierleaguenewsnow.com/wp-json/wp/v2/pages?_embed&slug=${slug}`, 
-    { next: { revalidate: 3600 } }
-  );
-  
-  if (!res.ok) return notFound();
-  const pages = await res.json();
-  if (!pages || !Array.isArray(pages) || pages.length === 0) return notFound();
-  const page = pages[0];
+  let page: any = null;
+  try {
+    const res = await fetch(
+      `https://premierleaguenewsnow.com/wp-json/wp/v2/pages?_embed&slug=${slug}`,
+      { next: { revalidate: 3600 } }
+    );
+
+    if (!res.ok) {
+      console.error(`About page fetch returned status ${res.status}`);
+      return (
+        <main className="bg-white dark:bg-zinc-950 pb-20 pt-8 min-h-[70vh]">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="py-12">
+              <h1 className="text-3xl sm:text-4xl font-black">About Us</h1>
+              <p className="mt-4 text-slate-600 dark:text-slate-400">Content is temporarily unavailable. Please try again later.</p>
+            </div>
+          </div>
+        </main>
+      );
+    }
+
+    const pages = await res.json();
+    if (!pages || !Array.isArray(pages) || pages.length === 0) return notFound();
+    page = pages[0];
+  } catch (error) {
+    console.error("Failed to fetch about page:", error);
+    return (
+      <main className="bg-white dark:bg-zinc-950 pb-20 pt-8 min-h-[70vh]">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="py-12">
+            <h1 className="text-3xl sm:text-4xl font-black">About Us</h1>
+            <p className="mt-4 text-slate-600 dark:text-slate-400">Content is temporarily unavailable. Please try again later.</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   let sidebarPosts: Post[] = [];
   try {

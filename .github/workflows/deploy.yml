@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       # 4. Install all your project dependencies (like Next.js, React, Tailwind)
       - name: Install Dependencies
@@ -27,7 +27,7 @@ jobs:
 
       # 5. Build the project and export static HTML to ./out/
       - name: Build Project
-        run: npm run build && npm run export
+        run: npm run build
 
       # 6. Take the finished 'out' folder and push it to Hostinger via FTP
       - name: Sync files via FTP
