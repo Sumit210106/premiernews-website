@@ -8,6 +8,25 @@ import { decodeHtml, getImageUrl, getPostPath } from '@/lib/wp';
 import Comments from '@/components/Comments';
 import AdBanner from '@/components/AdBanner'; // <-- 1. IMPORT ADBANNER COMPONENT
 
+export async function generateStaticParams() {
+  try {
+    const res = await fetch('https://premierleaguenewsnow.com/wp-json/wp/v2/posts?_fields=date,slug&per_page=50');
+    if (!res.ok) return [];
+    const posts = await res.json();
+    return posts.map((post: any) => {
+      const dateObj = new Date(post.date);
+      return {
+        year: String(dateObj.getFullYear()),
+        month: String(dateObj.getMonth() + 1).padStart(2, '0'),
+        day: String(dateObj.getDate()).padStart(2, '0'),
+        slug: post.slug,
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ 
   params 
 }: { 
@@ -73,7 +92,7 @@ export default async function SinglePostPage({
   if (!res.ok) return notFound();
   
   const posts = await res.json();
-  if (!posts || posts.length === 0) return notFound();
+  if (!posts || !Array.isArray(posts) || posts.length === 0) return notFound();
 
   const post = posts[0];
   const categories = post._embedded?.['wp:term']?.[0] || [];
