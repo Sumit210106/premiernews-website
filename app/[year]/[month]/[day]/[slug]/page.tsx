@@ -199,7 +199,7 @@ export default async function SinglePostPage({
 
             {/* 2. AD UNIT ABOVE ARTICLE CONTENT */}
             <div className="w-full max-w-3xl">
-              <AdBanner slotId="YOUR_ABOVE_ARTICLE_SLOT_ID" />
+              <AdBanner slotId="6658379634" />
             </div>
 
             <div className="w-full max-w-3xl">
@@ -275,7 +275,7 @@ export default async function SinglePostPage({
           <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-8">
             
             {/* 4. AD UNIT: SIDEBAR TOP */}
-            <AdBanner slotId="YOUR_SIDEBAR_TOP_SLOT_ID" />
+            <AdBanner slotId="3640703662" />
 
             {sidebarPosts.length > 0 && (
               <div className="bg-white dark:bg-zinc-950 rounded-2xl p-6 border border-slate-200 dark:border-zinc-800 shadow-sm">
