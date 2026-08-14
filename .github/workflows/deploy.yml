@@ -1,0 +1,40 @@
+name: Deploy Next.js to Hostinger
+
+# 1. When should this run? Every time you push code to the 'main' branch.
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # GitHub's temporary cloud computer
+
+    steps:
+      # 2. Grab your latest code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 3. Install Node.js on the temporary computer
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 4. Install all your project dependencies (like Next.js, React, Tailwind)
+      - name: Install Dependencies
+        run: npm install
+
+      # 5. Build the static HTML snapshot of your website
+      - name: Build Project
+        run: npm run build
+
+      # 6. Take the finished 'out' folder and push it to Hostinger via FTP
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./out/
+          server-dir: /public_html/
