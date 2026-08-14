@@ -153,6 +153,9 @@ export default function Navbar() {
                           <img 
                             src={club.logo} 
                             alt={club.name} 
+                            loading="lazy"
+                            width={48}
+                            height={48}
                             className="max-w-full max-h-full object-contain"
                           />
                         </div>
@@ -259,6 +262,9 @@ export default function Navbar() {
                         <img 
                           src={club.logo} 
                           alt={club.name} 
+                          loading="lazy"
+                          width={40}
+                          height={40}
                           className="max-w-full max-h-full object-contain"
                         />
                       </div>

@@ -11,13 +11,12 @@ export default function AdBanner({ slotId }: AdBannerProps) {
   const pushed = useRef(false);
 
   useEffect(() => {
-    // Prevent double-pushing in React Strict Mode (Localhost)
+    // Prevent double-pushing in React Strict Mode or re-renders
     if (pushed.current) return;
 
-    let observer: ResizeObserver | null = null;
+    let observer: IntersectionObserver | null = null;
 
     const pushAd = () => {
-      // Only push the ad if the container is actually visible on the screen (width > 0)
       if (containerRef.current && containerRef.current.offsetWidth > 0 && !pushed.current) {
         pushed.current = true;
         try {
@@ -27,25 +26,26 @@ export default function AdBanner({ slotId }: AdBannerProps) {
         } catch (error: any) {
           console.warn("AdSense warning:", error.message);
         }
-        
-        // Stop observing once the ad is loaded
         if (observer) observer.disconnect();
       }
     };
 
-    // 1. Try to push the ad immediately on mount
-    pushAd();
-
-    // 2. If the ad is hidden (e.g., MobileTabs on a Desktop screen), 
-    // observe it. If the user resizes the window and it becomes visible, load the ad then.
-    if (!pushed.current && containerRef.current) {
-      observer = new ResizeObserver(() => {
-        pushAd();
-      });
+    if ('IntersectionObserver' in window && containerRef.current) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !pushed.current) {
+              pushAd();
+            }
+          });
+        },
+        { rootMargin: '200px' }
+      );
       observer.observe(containerRef.current);
+    } else {
+      pushAd();
     }
 
-    // Cleanup observer on unmount
     return () => {
       if (observer) observer.disconnect();
     };

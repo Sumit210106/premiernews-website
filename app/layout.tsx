@@ -7,7 +7,7 @@ import { ThemeProvider } from "../components/ThemeProvider";
 import EmbedsRefresher from "@/components/EmbedsRefresher";
 import Script from "next/script"; // <-- 1. Import Next.js Script
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://premierleaguenewsnow.com"),
@@ -62,12 +62,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        {/* 2. ADD YOUR GOOGLE AUTO ADS SCRIPT HERE */}
+        {/* Google Auto Ads Script loaded lazily to preserve mobile PageSpeed */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3207230642900815" 
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col bg-white dark:bg-black text-slate-800 dark:text-slate-200 transition-colors duration-300`}>

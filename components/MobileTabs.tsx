@@ -8,20 +8,20 @@ import AdBanner from '@/components/AdBanner'; // <-- 1. IMPORT ADBANNER
 export default function MobileTabs({
   latest,
   analysis,
-  exclusive,
-  sidebarPosts 
+  exclusive
 }: {
   latest: any[],
   analysis: any[],
-  exclusive: any[],
-  sidebarPosts: any[]
+  exclusive: any[]
 }) {
   const [activeTab, setActiveTab] = useState('latest');
 
-  // Instantly snap back to the top of the page when switching tabs
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activeTab]);
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  };
 
   const tabs = [
     { id: 'latest', label: 'LATEST NEWS', data: latest },
@@ -39,7 +39,7 @@ export default function MobileTabs({
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`flex-1 text-center py-3 text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-colors ${
               activeTab === tab.id 
                 ? 'border-b-[3px] border-[#38003c] dark:border-[#00ff85] text-[#38003c] dark:text-[#00ff85]' 
@@ -68,8 +68,8 @@ export default function MobileTabs({
                   src={imageUrl} 
                   alt={post.title.rendered.replace(/<[^>]+>/g, '') || "Article thumbnail"} 
                   fill
-                  sizes="(max-width: 768px) 110px, 110px"
-                  priority={index < 3} // Loads top 3 images instantly for LCP boost
+                  sizes="110px"
+                  priority={index < 2} // Loads top 2 images instantly for LCP boost
                   className="object-cover" 
                 />
               </div>
